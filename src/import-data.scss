@@ -1,0 +1,55 @@
+.importData {
+  .grid {
+    margin: 0;
+    padding: 0;
+  }
+
+  .sectionTile {
+    height: 100%;
+    min-height: 400px;
+    padding: 1.5rem;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .sectionTitle {
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+    border-bottom: 2px solid var(--brand-teal);
+    padding-bottom: 0.5rem;
+  }
+
+  .fileUploader {
+    margin-bottom: 1rem;
+  }
+
+  .fileInfo {
+    margin-top: 1rem;
+  }
+
+  .optionGroup {
+    margin-bottom: 1.5rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+  }
+
+  .actionButtons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .actionButton {
+    flex: 1;
+  }
+}

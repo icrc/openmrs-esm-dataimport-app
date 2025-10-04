@@ -10,8 +10,8 @@ on:
       - created
 
 env:
-  ESM_NAME: "@openmrs/esm-template-app"
-  JS_NAME: "openmrs-esm-template-app.js"
+  ESM_NAME: "@openmrs/esm-data-import-app"
+  JS_NAME: "openmrs-esm-data-import-app.js"
 
 jobs:
   build:

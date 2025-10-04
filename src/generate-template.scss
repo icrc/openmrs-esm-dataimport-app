@@ -1,0 +1,140 @@
+.generateTemplate {
+  .grid {
+    margin: 0;
+    padding: 0;
+  }
+
+  .sectionTile {
+    height: 100%;
+    min-height: 500px;
+    padding: 1.5rem;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .sectionTitle {
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+    border-bottom: 2px solid var(--brand-teal);
+    padding-bottom: 0.5rem;
+  }
+
+  .search {
+    margin-bottom: 1rem;
+  }
+
+  .formList {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    padding: 0.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background-color: var(--muted-bg);
+  }
+
+  .formItem {
+    cursor: pointer;
+    padding: 0.5rem;
+    margin-bottom: 0.25rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    
+    &:hover {
+      background-color: var(--focus-ring);
+      border-color: var(--brand-teal);
+    }
+    
+    &:focus {
+      outline: none;
+      background-color: var(--focus-ring);
+      border-color: var(--brand-teal);
+      box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+    
+    &:active {
+      background-color: rgba(0, 147, 132, 0.1);
+    }
+  }
+
+  .formItemSelected {
+    background-color: rgba(0, 147, 132, 0.08);
+    border-color: var(--brand-teal);
+    
+    &:hover {
+      background-color: rgba(0, 147, 132, 0.12);
+    }
+  }
+
+  .formCheckbox {
+    margin: 0; // Remove margin since we're handling spacing in the parent
+    
+    // Make the checkbox non-interactive since the parent handles clicks
+    pointer-events: none;
+  }
+
+  .quickSelect {
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .optionGroup {
+    margin-bottom: 1.5rem;
+
+    h4 {
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+  }
+
+  .noSelection {
+    color: var(--disabled);
+    font-style: italic;
+    text-align: center;
+    margin: 2rem 0;
+  }
+
+  .selectedFormsList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .summary {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: var(--muted-bg);
+    border-radius: var(--radius-sm);
+
+    p {
+      margin: 0.25rem 0;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+  }
+
+  .generateButton {
+    width: 100%;
+    margin-top: auto;
+  }
+
+  .patientSearch {
+    padding: 1rem 0;
+  }
+}

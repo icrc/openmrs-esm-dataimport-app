@@ -1,37 +1,66 @@
-/**
- * From here, the application is pretty typical React, but with lots of
- * support from `@openmrs/esm-framework`. Check out `Greeter` to see
- * usage of the configuration system, and check out `PatientGetter` to
- * see data fetching using the OpenMRS FHIR API.
- *
- * Check out the Config docs:
- *   https://openmrs.github.io/openmrs-esm-core/#/main/config
- */
-
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Boxes } from './boxes/slot/boxes.component';
-import Greeter from './greeter/greeter.component';
-import PatientGetter from './patient-getter/patient-getter.component';
-import Resources from './resources/resources.component';
+import {
+  Grid,
+  Column,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel
+} from '@carbon/react';
+import GenerateTemplate from './generate-template.component';
+import ImportData from './import-data.component';
+import { Form } from './types';
 import styles from './root.scss';
 
 const Root: React.FC = () => {
   const { t } = useTranslation();
+  const [activeTab, setActiveTab] = useState(0);
+
+  const forms: Form[] = [
+    { uuid: '1', name: 'HIV Initial Visit', encounterType: 'HIV Initial', version: '1.0' },
+    { uuid: '2', name: 'TB Screening', encounterType: 'TB Screening', version: '1.2' },
+    { uuid: '3', name: 'Pregnancy Follow-up', encounterType: 'Pregnancy', version: '2.1' },
+    { uuid: '4', name: 'Immunization', encounterType: 'Immunization', version: '1.5' }
+  ];
 
   return (
     <div className={styles.container}>
-      <h3 className={styles.welcome}>{t('welcomeText', 'Welcome to the O3 Template app')}</h3>
-      <p className={styles.explainer}>
-        {t('explainer', 'The following examples demonstrate some key features of the O3 framework')}.
-      </p>
-      {/* Greeter: demonstrates the configuration system */}
-      <Greeter />
-      {/* Boxes: demonstrates the extension system */}
-      <Boxes />
-      {/* PatientGetter: demonstrates data fetching */}
-      <PatientGetter />
-      <Resources />
+      <Grid className={styles.grid}>
+        <Column lg={16} md={8} sm={4}>
+          <div className={styles.header}>
+            <h1 className={styles.title}>
+              {t('pageTitle', 'Offline Data: Excel Templates & Import')}
+            </h1>
+            <p className={styles.subtitle}>
+              {t('pageDescription', 'Generate Excel templates for offline data collection and import completed forms.')}
+              <a href="#" className={styles.link}> {t('operatorGuide', 'Operator Guide')}</a>
+            </p>
+          </div>
+        </Column>
+      </Grid>
+
+      <Grid className={styles.grid}>
+        <Column lg={16} md={8} sm={4}>
+          <Tabs selectedIndex={activeTab} onChange={({ selectedIndex }) => setActiveTab(selectedIndex)}>
+            <TabList>
+              <Tab>{t('generateTemplate', 'Generate Template')}</Tab>
+              <Tab>{t('importData', 'Import Data')}</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <GenerateTemplate forms={forms} />
+              </TabPanel>
+
+              <TabPanel>
+                <ImportData />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </Column>
+      </Grid>
+
     </div>
   );
 };
