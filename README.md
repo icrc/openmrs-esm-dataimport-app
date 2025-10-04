@@ -1,37 +1,89 @@
-# OpenMRS ESM Template App
+# OpenMRS ESM Data Import
 
-![Node.js CI](https://github.com/openmrs/openmrs-esm-template-app/workflows/Node.js%20CI/badge.svg)
+A modern OpenMRS 3.x microfrontend for generating Excel templates and importing offline data collection forms.
 
-This repository serves as a template for building OpenMRS frontend modules. For detailed guidance, see the [Creating a Frontend Module](https://openmrs.atlassian.net/wiki/x/rIIBCQ) documentation.
+## Overview
 
-For more information, please see the [OpenMRS Frontend Developer Documentation](https://openmrs.atlassian.net/wiki/x/IABBHg).
+This module enables healthcare teams to:
 
-The [Setup](https://openmrs.atlassian.net/wiki/x/PIIBCQ) section will help you get started with frontend module development.
+- **Generate Excel Templates** for offline data collection in remote areas
+- **Import Completed Forms** from Excel files back into OpenMRS
 
-## Running this code
+Perfect for outreach programs, mobile clinics, and areas with unreliable internet connectivity.
 
-```sh
-yarn  # to install dependencies
-yarn start  # to run the dev server
-```
+## Features
 
-Once it is running, a browser window should open running the O3 reference application. Log in and then navigate to `/openmrs/spa/root`.
+### Excel Template Generation
+- **Multi-Form Support**: Select from available OpenMRS forms
+- **Flexible Structure**: Choose which O3 Forms to include in the spreadsheet:
+  - Patient Registration Sheet
+  - Visit Sheet
+  - Location Details
+  - Instructions Sheet
+- **Smart Configuration**: Language selection, repeat handling, coded dropdowns
+- **Real-time Preview**: See total sheets and estimated file size
 
-## Adapting the code
+### Data Import
+- **File Upload**: Support for `.xlsx`, `.xls`, and `.csv` files
+- **Import Options**: Permissive vs strict mode
+- **Patient Matching**: Flexible patient identification policies
+- **Dry Run**: Test imports before committing changes
 
-1. Replace all instances of "template" with your frontend module's name
-2. Update `index.ts` with your feature name, page name, and route
-3. Rename the `root.*` files to match your first page
-4. Clear `config-schema` objects and rebuild as needed
-5. Delete the `greeter` and `patient-getter` directories and clear `root.component.tsx`
-6. Clear `translations/en.json`
-7. Update `.github/workflows` for your deployment needs
-8. Replace this README with documentation for your module
+## Getting Started
 
-At this point, you should be able to write your first page as a React application.
+### Prerequisites
+- OpenMRS 3.x platform
+- Node.js 16+ and npm/yarn
+- Modern web browser
 
-See the [Medication dispensing app](https://github.com/openmrs/openmrs-esm-dispensing-app) for a complete example of a non-trivial frontend module built using this template.
+### Installation
 
-## Integration
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/openmrs/openmrs-esm-data-import.git
+   cd openmrs-esm-data-import
+   ```
 
-See [Creating a Frontend Module](https://openmrs.atlassian.net/wiki/x/rIIBCQ) for details on how to integrate your custom frontend module into the OpenMRS reference application.
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+3. **Development server**
+   ```bash
+   npm start
+   # or
+   yarn start
+   ```
+
+4. **Build for production**
+   ```bash
+   npm run build
+   # or
+   yarn build
+   ```
+
+## Usage
+
+### Generating Excel Templates
+
+1. **Select Forms**: Choose the OpenMRS forms you want to include
+2. **Configure Options**: 
+   - Enable/disable data sheets (Patient Registration, Visits, Location, Instructions)
+   - Set language and repeat handling preferences
+3. **Generate**: Click "Generate Template" to create your Excel file
+
+### Importing Data
+
+1. **Upload File**: Select your completed Excel file
+2. **Set Options**: Choose import mode and patient matching policy
+3. **Test**: Run a dry run to preview changes
+4. **Import**: Execute the import when ready
+
+## License
+
+This project is licensed under the Mozilla Public License 2.0 - see the [LICENSE](LICENSE) file for details.
+
+---
