@@ -46,23 +46,12 @@ Perfect for outreach programs, mobile clinics, and areas with unreliable interne
 
 2. **Install dependencies**
    ```bash
-   npm install
-   # or
-   yarn install
+   yarn
    ```
 
 3. **Development server**
    ```bash
-   npm start
-   # or
    yarn start
-   ```
-
-4. **Build for production**
-   ```bash
-   npm run build
-   # or
-   yarn build
    ```
 
 ## Usage

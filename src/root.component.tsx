@@ -11,7 +11,7 @@ import {
 } from '@carbon/react';
 import GenerateTemplate from './generate-template.component';
 import ImportData from './import-data.component';
-import { Form } from './types';
+import type { Form } from './types';
 import styles from './root.scss';
 
 const Root: React.FC = () => {

@@ -17,7 +17,7 @@ import {
   Search,
   InlineLoading
 } from '@carbon/react';
-import { Form, TemplateOptions } from './types';
+import type { Form, TemplateOptions } from './types';
 import { LANGUAGES, REPEAT_OPTIONS } from './constants';
 import styles from './generate-template.scss';
 
