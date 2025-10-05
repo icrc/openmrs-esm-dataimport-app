@@ -8,8 +8,6 @@ import {
   Checkbox,
   Select,
   SelectItem,
-  RadioButtonGroup,
-  RadioButton,
   Toggle,
   Modal,
   Loading,
@@ -17,15 +15,13 @@ import {
   Search,
   InlineLoading
 } from '@carbon/react';
-import type { Form, TemplateOptions } from './types';
-import { LANGUAGES, REPEAT_OPTIONS } from './constants';
+import type { TemplateOptions } from '../types';
+import { LANGUAGES, REPEAT_OPTIONS } from '../constants';
+import { useGetAllForms } from '../hooks/useGetAllForms';
 import styles from './generate-template.scss';
 
-interface GenerateTemplateProps {
-  forms: Form[];
-}
-
-const GenerateTemplate: React.FC<GenerateTemplateProps> = ({ forms }) => {
+const GenerateTemplate: React.FC = () => {
+  const { forms, isLoading, error } = useGetAllForms();
   const { t } = useTranslation();
   const [selectedForms, setSelectedForms] = useState<string[]>([]);
   const [templateOptions, setTemplateOptions] = useState<TemplateOptions>({
@@ -71,6 +67,34 @@ const GenerateTemplate: React.FC<GenerateTemplateProps> = ({ forms }) => {
     return (baseSize + (sheets * sizePerSheet)).toFixed(1);
   };
 
+  if (isLoading) {
+    return (
+      <div className={styles.generateTemplate}>
+        <Grid className={styles.grid}>
+          <Column lg={16} md={8} sm={4}>
+            <Tile className={styles.sectionTile}>
+              <InlineLoading description={t('loadingForms', 'Loading forms...')} />
+            </Tile>
+          </Column>
+        </Grid>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.generateTemplate}>
+        <Grid className={styles.grid}>
+          <Column lg={16} md={8} sm={4}>
+            <Tile className={styles.sectionTile}>
+              <p>{t('errorLoadingForms', 'Error loading forms. Please try again.')}</p>
+            </Tile>
+          </Column>
+        </Grid>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.generateTemplate}>
       <Grid className={styles.grid}>
@@ -83,7 +107,7 @@ const GenerateTemplate: React.FC<GenerateTemplateProps> = ({ forms }) => {
               className={styles.search}
             />
             <div className={styles.formList}>
-              {forms.map(form => (
+              {forms?.map(form => (
                 <div
                   key={form.uuid}
                   className={`${styles.formItem} ${selectedForms.includes(form.uuid) ? styles.formItemSelected : ''}`}
@@ -107,13 +131,6 @@ const GenerateTemplate: React.FC<GenerateTemplateProps> = ({ forms }) => {
                 </div>
               ))}
             </div>
-            <Button
-              kind="ghost"
-              size="sm"
-              className={styles.quickSelect}
-            >
-              {t('selectRecommended', 'Select recommended for outreach')}
-            </Button>
           </Tile>
         </Column>
 

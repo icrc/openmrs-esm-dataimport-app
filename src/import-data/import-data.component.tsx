@@ -7,13 +7,14 @@ import {
   Tile,
   Select,
   SelectItem,
-  Toggle,
+  RadioButtonGroup,
+  RadioButton,
   FileUploader,
   Tag,
   InlineLoading
 } from '@carbon/react';
-import { ImportOptions } from './types';
-import { SUPPORTED_FILE_TYPES, IMPORT_MODES, PATIENT_MATCH_POLICIES } from './constants';
+import { ImportOptions } from '../types';
+import { SUPPORTED_FILE_TYPES, IMPORT_MODES, PATIENT_MATCH_POLICIES } from '../constants';
 import styles from './import-data.scss';
 
 const ImportData: React.FC = () => {
@@ -21,8 +22,7 @@ const ImportData: React.FC = () => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [importMode, setImportMode] = useState('permissive');
   const [patientMatchPolicy, setPatientMatchPolicy] = useState('identifier-only');
-  const [isIdempotent, setIsIdempotent] = useState(true);
-  const [allowPatientUpdates, setAllowPatientUpdates] = useState(false);
+  const [importBehavior, setImportBehavior] = useState('idempotent');
   const [isDryRunning, setIsDryRunning] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
 
@@ -85,19 +85,25 @@ const ImportData: React.FC = () => {
               </Select>
             </div>
 
-            <div className={styles.optionGroup}>
-              <Toggle
-                id="idempotent"
-                labelText={t('idempotent', 'Idempotent')}
-                toggled={isIdempotent}
-                onToggle={setIsIdempotent}
-              />
-              <Toggle
-                id="allowPatientUpdates"
-                labelText={t('allowPatientUpdates', 'Allow patient updates')}
-                toggled={allowPatientUpdates}
-                onToggle={setAllowPatientUpdates}
-              />
+            <div className={styles.importBehaviorOptions}>
+              <label htmlFor="importBehavior">{t('importBehavior', 'Import behavior:')}</label>
+              <RadioButtonGroup
+                id="importBehavior"
+                name="importBehavior"
+                defaultSelected={importBehavior}
+                onChange={(value) => setImportBehavior(String(value))}
+              >
+                <RadioButton
+                  id="idempotent"
+                  labelText={t('idempotent', 'Idempotent (safe to run multiple times)')}
+                  value="idempotent"
+                />
+                <RadioButton
+                  id="allowPatientUpdates"
+                  labelText={t('allowPatientUpdates', 'Allow patient updates')}
+                  value="allowPatientUpdates"
+                />
+              </RadioButtonGroup>
             </div>
 
             <div className={styles.actionButtons}>

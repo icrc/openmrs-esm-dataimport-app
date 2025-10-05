@@ -90,23 +90,6 @@
   padding-bottom: layout.$spacing-02;
 }
 
-.optionGroup {
-  margin-bottom: layout.$spacing-05;
-  
-  h4 {
-    @include type.type-style('heading-04');
-    margin-bottom: layout.$spacing-03;
-    color: var(--text);
-  }
-  
-  label {
-    @include type.type-style('label-01');
-    color: var(--text-muted);
-    display: block;
-    margin-bottom: layout.$spacing-02;
-  }
-}
-
 .search {
   margin-bottom: layout.$spacing-04;
 }
@@ -129,11 +112,6 @@
   &:hover {
     background-color: var(--focus-ring);
   }
-}
-
-.quickSelect {
-  margin-top: layout.$spacing-03;
-  width: 100%;
 }
 
 .selectedFormsList {
@@ -227,6 +205,21 @@
 :global(.cds--tabs__nav-item--selected .cds--tabs__nav-link) {
   border-bottom-color: var(--brand-teal) !important;
   color: var(--brand-teal) !important;
+}
+
+:global(.cds--tabs__nav-link) {
+  border-bottom-color: transparent !important;
+  
+  &:hover {
+    border-bottom-color: var(--brand-teal) !important;
+  }
+}
+
+:global(.cds--tabs__nav-item--selected) {
+  .cds--tabs__nav-link {
+    border-bottom-color: var(--brand-teal) !important;
+    border-bottom-width: 2px !important;
+  }
 }
 
 :global(.cds--tabs__nav-link:hover) {

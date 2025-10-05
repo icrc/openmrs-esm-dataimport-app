@@ -9,21 +9,13 @@ import {
   TabPanels,
   TabPanel
 } from '@carbon/react';
-import GenerateTemplate from './generate-template.component';
-import ImportData from './import-data.component';
-import type { Form } from './types';
+import GenerateTemplate from './generate-template/generate-template.component';
+import ImportData from './import-data/import-data.component';
 import styles from './root.scss';
 
 const Root: React.FC = () => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState(0);
-
-  const forms: Form[] = [
-    { uuid: '1', name: 'HIV Initial Visit', encounterType: 'HIV Initial', version: '1.0' },
-    { uuid: '2', name: 'TB Screening', encounterType: 'TB Screening', version: '1.2' },
-    { uuid: '3', name: 'Pregnancy Follow-up', encounterType: 'Pregnancy', version: '2.1' },
-    { uuid: '4', name: 'Immunization', encounterType: 'Immunization', version: '1.5' }
-  ];
 
   return (
     <div className={styles.container}>
@@ -50,7 +42,7 @@ const Root: React.FC = () => {
             </TabList>
             <TabPanels>
               <TabPanel>
-                <GenerateTemplate forms={forms} />
+                <GenerateTemplate />
               </TabPanel>
 
               <TabPanel>
