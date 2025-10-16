@@ -16,7 +16,7 @@ export class RootPage {
   }
 
   async goto() {
-    await this.page.goto('/openmrs/spa/root');
+    await this.page.goto('/openmrs/spa/data-import');
     await this.pageTitle.waitFor();
   }
 
