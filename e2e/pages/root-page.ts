@@ -9,14 +9,14 @@ export class RootPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.pageTitle = page.getByRole('heading', { name: /offline data: excel templates & import/i });
-    this.pageDescription = page.getByText(/generate excel templates for offline data collection/i);
-    this.generateTemplateTab = page.getByRole('tab', { name: /generate template/i });
-    this.importDataTab = page.getByRole('tab', { name: /import data/i });
+    this.pageTitle = page.getByRole('heading', { name: /Excel Templates export & Import/i });
+    this.pageDescription = page.getByText(/Generate Excel templates for offline data collection and import completed forms./i);
+    this.generateTemplateTab = page.getByRole('tab', { name: /Generate Excel Template/i });
+    this.importDataTab = page.getByRole('tab', { name: /Import Excel File/i });
   }
 
   async goto() {
-    await this.page.goto('/openmrs/spa/root');
+    await this.page.goto('/openmrs/spa/data-import');
     await this.pageTitle.waitFor();
   }
 
