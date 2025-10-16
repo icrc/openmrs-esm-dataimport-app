@@ -48,8 +48,8 @@
 
 .title {
   @include type.type-style('heading-01');
-  color: var(--brand-teal);
   margin-bottom: layout.$spacing-03;
+  font-size: 1.5rem !important;
 }
 
 .subtitle {

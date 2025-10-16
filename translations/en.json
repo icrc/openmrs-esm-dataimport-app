@@ -1,9 +1,9 @@
 {
-  "pageTitle": "Offline Data: Excel Templates & Import",
+  "pageTitle": "Excel Templates export & Import",
   "pageDescription": "Generate Excel templates for offline data collection and import completed forms.",
   "operatorGuide": "Operator Guide",
-  "generateTemplate": "Generate Template",
-  "importData": "Import Data",
+  "generateTemplate": "Generate Excel Template",
+  "importData": "Import Excel File",
   "adminSettings": "Admin Settings",
   "selectForms": "Select Forms",
   "searchForms": "Search forms...",

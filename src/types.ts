@@ -7,14 +7,7 @@ export interface Form {
 
 export interface TemplateOptions {
   includePatientRegistration: boolean;
-  includeVisitSheet: boolean;
-  includeLocationDetails: boolean;
-  includeInstructions: boolean;
-  language: string;
-  includeRepeatsInline: boolean;
-  includeCodedDropdowns: boolean;
-  includeReadme: boolean;
-  filenamePattern: string;
+  // filenamePattern: string;
 }
 
 export interface ImportOptions {

@@ -11,24 +11,6 @@ This module enables healthcare teams to:
 
 Perfect for outreach programs, mobile clinics, and areas with unreliable internet connectivity.
 
-## Features
-
-### Excel Template Generation
-- **Multi-Form Support**: Select from available OpenMRS forms
-- **Flexible Structure**: Choose which O3 Forms to include in the spreadsheet:
-  - Patient Registration Sheet
-  - Visit Sheet
-  - Location Details
-  - Instructions Sheet
-- **Smart Configuration**: Language selection, repeat handling, coded dropdowns
-- **Real-time Preview**: See total sheets and estimated file size
-
-### Data Import
-- **File Upload**: Support for `.xlsx`, `.xls`, and `.csv` files
-- **Import Options**: Permissive vs strict mode
-- **Patient Matching**: Flexible patient identification policies
-- **Dry Run**: Test imports before committing changes
-
 ## Getting Started
 
 ### Prerequisites
@@ -58,18 +40,16 @@ Perfect for outreach programs, mobile clinics, and areas with unreliable interne
 
 ### Generating Excel Templates
 
-1. **Select Forms**: Choose the OpenMRS forms you want to include
-2. **Configure Options**: 
-   - Enable/disable data sheets (Patient Registration, Visits, Location, Instructions)
-   - Set language and repeat handling preferences
-3. **Generate**: Click "Generate Template" to create your Excel file
+1. - Choose the OpenMRS forms you want to include
+2. - Enable/disable data sheets (Patient Registration)
+3. - Click "Generate Template" to create your Excel file
 
 ### Importing Data
 
-1. **Upload File**: Select your completed Excel file
-2. **Set Options**: Choose import mode and patient matching policy
-3. **Test**: Run a dry run to preview changes
-4. **Import**: Execute the import when ready
+1. - Select your completed Excel file
+2. - Choose import mode and patient matching policy
+3. - Run a dry run to preview changes
+4. - Execute the import when ready
 
 ## License
 

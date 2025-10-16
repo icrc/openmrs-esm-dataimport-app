@@ -38,3 +38,4 @@ export function startupApp() {
  * `/openmrs/spa/root`.
  */
 export const root = getAsyncLifecycle(() => import('./root.component'), options);
+export const adminDataImportCardLink = getAsyncLifecycle(() => import('./admin-data-import-card-link.component'), options);

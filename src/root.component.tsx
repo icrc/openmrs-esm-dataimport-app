@@ -23,11 +23,10 @@ const Root: React.FC = () => {
         <Column lg={16} md={8} sm={4}>
           <div className={styles.header}>
             <h1 className={styles.title}>
-              {t('pageTitle', 'Offline Data: Excel Templates & Import')}
+              {t('pageTitle', 'Excel Templates export & Import')}
             </h1>
             <p className={styles.subtitle}>
               {t('pageDescription', 'Generate Excel templates for offline data collection and import completed forms.')}
-              <a href="#" className={styles.link}> {t('operatorGuide', 'Operator Guide')}</a>
             </p>
           </div>
         </Column>
@@ -37,8 +36,8 @@ const Root: React.FC = () => {
         <Column lg={16} md={8} sm={4}>
           <Tabs selectedIndex={activeTab} onChange={({ selectedIndex }) => setActiveTab(selectedIndex)}>
             <TabList>
-              <Tab>{t('generateTemplate', 'Generate Template')}</Tab>
-              <Tab>{t('importData', 'Import Data')}</Tab>
+              <Tab>{t('generateTemplate', 'Generate Excel Template')}</Tab>
+              <Tab>{t('importData', 'Import Excel File')}</Tab>
             </TabList>
             <TabPanels>
               <TabPanel>

@@ -6,9 +6,6 @@ import {
   Column,
   Tile,
   Checkbox,
-  Select,
-  SelectItem,
-  Toggle,
   Modal,
   Loading,
   Tag,
@@ -16,7 +13,6 @@ import {
   InlineLoading
 } from '@carbon/react';
 import type { TemplateOptions } from '../types';
-import { LANGUAGES, REPEAT_OPTIONS } from '../constants';
 import { useGetAllForms } from '../hooks/useGetAllForms';
 import styles from './generate-template.scss';
 
@@ -25,15 +21,8 @@ const GenerateTemplate: React.FC = () => {
   const { t } = useTranslation();
   const [selectedForms, setSelectedForms] = useState<string[]>([]);
   const [templateOptions, setTemplateOptions] = useState<TemplateOptions>({
-    includePatientRegistration: true,
-    includeVisitSheet: false,
-    includeLocationDetails: false,
-    includeInstructions: true,
-    language: 'en',
-    includeRepeatsInline: false,
-    includeCodedDropdowns: true,
-    includeReadme: true,
-    filenamePattern: '{identifier}_{formnames}_{date}'
+    includePatientRegistration: true
+    // filenamePattern: '{identifier}_{formnames}_{date}'
   });
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -53,10 +42,7 @@ const GenerateTemplate: React.FC = () => {
 
   const calculateTotalSheets = () => {
     let total = selectedForms.length;
-    if (templateOptions.includeInstructions) total += 1;
     if (templateOptions.includePatientRegistration) total += 1;
-    if (templateOptions.includeVisitSheet) total += 1;
-    if (templateOptions.includeLocationDetails) total += 1;
     return total;
   };
 
@@ -145,43 +131,6 @@ const GenerateTemplate: React.FC = () => {
                 labelText={t('includePatientRegistration', 'Include Patient Registration Sheet')}
                 checked={templateOptions.includePatientRegistration}
                 onChange={(event, { checked }) => setTemplateOptions({...templateOptions, includePatientRegistration: checked})}
-              />
-              <Checkbox
-                id="includeVisitSheet"
-                labelText={t('includeVisitSheet', 'Include Visit Sheet')}
-                checked={templateOptions.includeVisitSheet}
-                onChange={(event, { checked }) => setTemplateOptions({...templateOptions, includeVisitSheet: checked})}
-              />
-              <Checkbox
-                id="includeLocationDetails"
-                labelText={t('includeLocationDetails', 'Include Location Details')}
-                checked={templateOptions.includeLocationDetails}
-                onChange={(event, { checked }) => setTemplateOptions({...templateOptions, includeLocationDetails: checked})}
-              />
-              <Checkbox
-                id="includeInstructions"
-                labelText={t('includeInstructions', 'Add Instructions Sheet')}
-                checked={templateOptions.includeInstructions}
-                onChange={(event, { checked }) => setTemplateOptions({...templateOptions, includeInstructions: checked})}
-              />
-            </div>
-
-            <div className={styles.optionGroup}>
-              <label htmlFor="language">{t('language', 'Language:')}</label>
-              <Select id="language" defaultValue={templateOptions.language}>
-                {LANGUAGES.map(lang => (
-                  <SelectItem key={lang.value} value={lang.value} text={lang.text} />
-                ))}
-              </Select>
-            </div>
-
-
-            <div className={styles.optionGroup}>
-              <Toggle
-                id="includeCodedDropdowns"
-                labelText={t('includeCodedDropdowns', 'Include coded dropdowns')}
-                toggled={templateOptions.includeCodedDropdowns}
-                onToggle={(toggled) => setTemplateOptions({...templateOptions, includeCodedDropdowns: toggled})}
               />
             </div>
           </Tile>
