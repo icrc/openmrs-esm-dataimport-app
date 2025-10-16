@@ -6,24 +6,22 @@ import {
   Column,
   Tile,
   Checkbox,
-  Modal,
-  Loading,
   Tag,
   Search,
   InlineLoading
 } from '@carbon/react';
 import type { TemplateOptions } from '../types';
 import { useGetAllForms } from '../hooks/useGetAllForms';
+import { useGenerateTemplate } from '../hooks/useGenerateTemplate';
+import { showToast, showNotification } from '@openmrs/esm-framework';
 import styles from './generate-template.scss';
 
 const GenerateTemplate: React.FC = () => {
   const { forms, isLoading, error } = useGetAllForms();
+  const { generate, isGenerating: isGeneratingFile } = useGenerateTemplate();
   const { t } = useTranslation();
   const [selectedForms, setSelectedForms] = useState<string[]>([]);
-  const [templateOptions, setTemplateOptions] = useState<TemplateOptions>({
-    includePatientRegistration: true
-    // filenamePattern: '{identifier}_{formnames}_{date}'
-  });
+  const [templateOptions, setTemplateOptions] = useState<TemplateOptions>({includePatientRegistration: true});
   const [isGenerating, setIsGenerating] = useState(false);
 
   const handleFormSelection = (formUuid: string, checked: boolean) => {
@@ -35,9 +33,25 @@ const GenerateTemplate: React.FC = () => {
   };
 
   const handleGenerateTemplate = async () => {
-    setIsGenerating(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsGenerating(false);
+    try {
+      setIsGenerating(true);
+      await generate(selectedForms, {
+        includePatientRegistration: templateOptions.includePatientRegistration,
+      });
+      showToast({
+        description: t('templateGenerated', 'Template generated'),
+        kind: 'success',
+      });
+    } catch (e) {
+      showNotification({
+        title: t('failedToGenerateTemplate', 'Failed to generate template'),
+        description: (e as Error)?.message || 'Unknown error',
+        kind: 'error',
+        critical: true,
+      });
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const calculateTotalSheets = () => {
@@ -165,7 +179,7 @@ const GenerateTemplate: React.FC = () => {
               disabled={selectedForms.length === 0 || isGenerating}
               onClick={handleGenerateTemplate}
             >
-              {isGenerating ? (
+              {isGenerating || isGeneratingFile ? (
                 <InlineLoading description={t('generating', 'Generating...')} />
               ) : (
                 t('generateTemplate', 'Generate Template')
@@ -174,16 +188,6 @@ const GenerateTemplate: React.FC = () => {
           </Tile>
         </Column>
       </Grid>
-
-
-      <Modal
-        open={isGenerating}
-        modalHeading={t('generatingTemplate', 'Generating Template')}
-        preventCloseOnClickOutside
-        size="sm"
-      >
-        <Loading description={t('generatingTemplateDescription', 'Creating your Excel template...')} />
-      </Modal>
     </div>
   );
 };
