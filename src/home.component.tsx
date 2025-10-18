@@ -8,7 +8,7 @@ const Home: React.FC = () => {
 
   return (
     <section className={styles.section}>
-      <Header title={t('overview', 'Excel Import & Export Overview')} />
+      <Header title={t('pageTitle', 'Excel Templates export & Import')} />
     </section>
   );
 };
