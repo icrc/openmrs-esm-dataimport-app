@@ -48,27 +48,27 @@
     
     &:hover {
       background-color: var(--focus-ring);
-      border-color: var(--brand-teal);
+      border-color: var(--border);
     }
     
     &:focus {
       outline: none;
       background-color: var(--focus-ring);
-      border-color: var(--brand-teal);
+      border-color: var(--border);
       box-shadow: 0 0 0 2px var(--focus-ring);
     }
     
     &:active {
-      background-color: rgba(0, 147, 132, 0.1);
+      background-color: var(--focus-ring);
     }
   }
 
   .formItemSelected {
-    background-color: rgba(0, 147, 132, 0.08);
-    border-color: var(--brand-teal);
+    background-color: var(--muted-bg);
+    border-color: var(--border);
     
     &:hover {
-      background-color: rgba(0, 147, 132, 0.12);
+      background-color: var(--focus-ring);
     }
   }
 
