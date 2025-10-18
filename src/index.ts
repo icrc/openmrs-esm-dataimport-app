@@ -8,7 +8,7 @@ import { getAsyncLifecycle, defineConfigSchema, getSyncLifecycle } from '@openmr
 import { configSchema } from './config-schema';
 import { createLeftPanelLink } from './left-panel-link.component';
 
-const moduleName = '@openmrs/esm-data-import-app';
+const moduleName = '@openmrs/esm-dataimport-app';
 
 const options = {
   featureName: 'data-import',
