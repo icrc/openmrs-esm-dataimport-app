@@ -22,8 +22,8 @@ Perfect for outreach programs, mobile clinics, and areas with unreliable interne
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/openmrs/openmrs-esm-data-import.git
-   cd openmrs-esm-data-import
+   git clone https://github.com/openmrs/openmrs-esm-dataimport-app.git
+   cd openmrs-esm-dataimport-app
    ```
 
 2. **Install dependencies**
