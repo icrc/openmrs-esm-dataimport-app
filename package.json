@@ -3,7 +3,7 @@
   "version": "4.0.0",
   "license": "MPL-2.0",
   "description": "An OpenMRS seed application for building microfrontends",
-  "browser": "dist/openmrs-esm-data-import-app.js",
+  "browser": "dist/openmrs-esm-dataimport-app.js",
   "main": "src/index.ts",
   "source": true,
   "scripts": {
@@ -30,14 +30,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openmrs/openmrs-esm-data-import-app.git"
+    "url": "git+https://github.com/openmrs/openmrs-esm-dataimport-app.git"
   },
-  "homepage": "https://github.com/openmrs/openmrs-esm-data-import-app#readme",
+  "homepage": "https://github.com/openmrs/openmrs-esm-dataimport-app#readme",
   "publishConfig": {
     "access": "public"
   },
   "bugs": {
-    "url": "https://github.com/openmrs/openmrs-esm-data-import-app/issues"
+    "url": "https://github.com/openmrs/openmrs-esm-dataimport-app/issues"
   },
   "dependencies": {
     "@carbon/react": "^1.83.0",
