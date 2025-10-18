@@ -22,7 +22,7 @@ Perfect for outreach programs, mobile clinics, and areas with unreliable interne
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/openmrs/openmrs-esm-dataimport-app.git
+   git clone https://github.com/icrc/openmrs-esm-dataimport-app.git
    cd openmrs-esm-dataimport-app
    ```
 
@@ -35,24 +35,3 @@ Perfect for outreach programs, mobile clinics, and areas with unreliable interne
    ```bash
    yarn start
    ```
-
-## Usage
-
-### Generating Excel Templates
-
-1. - Choose the OpenMRS forms you want to include
-2. - Enable/disable data sheets (Patient Registration)
-3. - Click "Generate Template" to create your Excel file
-
-### Importing Data
-
-1. - Select your completed Excel file
-2. - Choose import mode and patient matching policy
-3. - Run a dry run to preview changes
-4. - Execute the import when ready
-
-## License
-
-This project is licensed under the Mozilla Public License 2.0 - see the [LICENSE](LICENSE) file for details.
-
----
