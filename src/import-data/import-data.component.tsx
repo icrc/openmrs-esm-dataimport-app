@@ -15,6 +15,7 @@ import {
 } from '@carbon/react';
 import { ImportOptions } from '../types';
 import { SUPPORTED_FILE_TYPES, IMPORT_MODES, PATIENT_MATCH_POLICIES } from '../constants';
+import Header from '../header/header.component';
 import styles from './import-data.scss';
 
 const ImportData: React.FC = () => {
@@ -40,7 +41,11 @@ const ImportData: React.FC = () => {
 
   return (
     <div className={styles.importData}>
-      <Grid className={styles.grid}>
+      <div className="pageHeader">
+        <Header title={t('excelDataImport', 'Excel Data Import')} />
+      </div>
+      <div className="mainContent">
+        <Grid className="componentGrid">
         <Column lg={8} md={4} sm={4}>
           <Tile className={styles.sectionTile}>
             <h3 className={styles.sectionTitle}>{t('uploadFile', 'Upload File')}</h3>
@@ -135,6 +140,7 @@ const ImportData: React.FC = () => {
           </Tile>
         </Column>
       </Grid>
+      </div>
     </div>
   );
 };

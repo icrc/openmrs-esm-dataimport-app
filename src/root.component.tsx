@@ -1,58 +1,30 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import {
-  Grid,
-  Column,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanels,
-  TabPanel
-} from '@carbon/react';
+import React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { useLeftNav, WorkspaceContainer } from '@openmrs/esm-framework';
 import GenerateTemplate from './generate-template/generate-template.component';
 import ImportData from './import-data/import-data.component';
+import LeftPanel from './left-panel/left-panel-component';
+import Home from './home.component';
 import styles from './root.scss';
 
 const Root: React.FC = () => {
-  const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState(0);
+  const spaBasePath = window.spaBase;
+  const dataImportBasename = window.getOpenmrsSpaBase() + 'data-import';
+
+  useLeftNav({ name: 'data-import-left-panel-slot', basePath: spaBasePath });
 
   return (
-    <div className={styles.container}>
-      <Grid className={styles.grid}>
-        <Column lg={16} md={8} sm={4}>
-          <div className={styles.header}>
-            <h1 className={styles.title}>
-              {t('pageTitle', 'Excel Templates export & Import')}
-            </h1>
-            <p className={styles.subtitle}>
-              {t('pageDescription', 'Generate Excel templates for offline data collection and import completed forms.')}
-            </p>
-          </div>
-        </Column>
-      </Grid>
-
-      <Grid className={styles.grid}>
-        <Column lg={16} md={8} sm={4}>
-          <Tabs selectedIndex={activeTab} onChange={({ selectedIndex }) => setActiveTab(selectedIndex)}>
-            <TabList>
-              <Tab>{t('generateTemplate', 'Generate Excel Template')}</Tab>
-              <Tab>{t('importData', 'Import Excel File')}</Tab>
-            </TabList>
-            <TabPanels>
-              <TabPanel>
-                <GenerateTemplate />
-              </TabPanel>
-
-              <TabPanel>
-                <ImportData />
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        </Column>
-      </Grid>
-
-    </div>
+    <BrowserRouter basename={dataImportBasename}>
+      <LeftPanel />
+      <main className={styles.containerroot}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/generate-template" element={<GenerateTemplate />} />
+          <Route path="/excel-import" element={<ImportData />} />
+        </Routes>
+      </main>
+      <WorkspaceContainer contextKey="data-import" />
+    </BrowserRouter>
   );
 };
 

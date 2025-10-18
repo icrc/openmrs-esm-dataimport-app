@@ -36,6 +36,51 @@
   min-height: 100vh;
 }
 
+.containerroot {
+  background-color: var(--bg-page);
+  min-height: calc(100vh - layout.$spacing-09);
+  padding: 0;
+}
+
+:global(.omrs-breakpoint-gt-tablet) .containerroot {
+  margin-left: var(--omrs-sidenav-width);
+}
+
+// Main content area styling
+.mainContent {
+  padding: layout.$spacing-07;
+  max-width: 100%;
+}
+
+// Header alignment - extend full width
+.pageHeader {
+  margin-bottom: 1rem; // 1rem spacing as requested
+  margin-left: calc(-1 * var(--omrs-sidenav-width, 0px)); // Extend to touch left nav
+  margin-right: calc(-1 * layout.$spacing-07); // Extend to touch right side
+  padding-left: var(--omrs-sidenav-width, 0px); // Restore content padding
+  padding-right: layout.$spacing-07; // Restore content padding
+  width: calc(100% + var(--omrs-sidenav-width, 0px) + layout.$spacing-07); // Ensure full width
+}
+
+// When left nav is not present (mobile/tablet)
+:global(.omrs-breakpoint-lt-desktop) .pageHeader {
+  margin-left: calc(-1 * layout.$spacing-07); // Extend to touch left side
+  margin-right: calc(-1 * layout.$spacing-07); // Extend to touch right side
+  padding-left: layout.$spacing-07; // Restore content padding
+  padding-right: layout.$spacing-07; // Restore content padding
+  width: calc(100% + 2 * layout.$spacing-07); // Ensure full width
+}
+
+// Component grid alignment
+.componentGrid {
+  margin: 0;
+  padding: 0;
+}
+
+:global(.omrs-breakpoint-gt-tablet) .container {
+  margin-left: var(--omrs-sidenav-width);
+}
+
 .grid {
   margin-bottom: layout.$spacing-06;
 }
@@ -263,6 +308,23 @@
 @media (max-width: 768px) {
   .container {
     padding: layout.$spacing-04;
+  }
+  
+  .containerroot {
+    padding: 0;
+  }
+  
+  .mainContent {
+    padding: layout.$spacing-04;
+  }
+  
+  .pageHeader {
+    margin-bottom: 1rem; // Keep 1rem spacing on mobile too
+    margin-left: calc(-1 * layout.$spacing-04); // Extend to touch left side on mobile
+    margin-right: calc(-1 * layout.$spacing-04); // Extend to touch right side on mobile
+    padding-left: layout.$spacing-04; // Restore content padding on mobile
+    padding-right: layout.$spacing-04; // Restore content padding on mobile
+    width: calc(100% + 2 * layout.$spacing-04); // Ensure full width on mobile
   }
   
   .actionButtons {

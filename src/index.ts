@@ -4,8 +4,9 @@
  * connects the app shell to the React application(s) that make up this
  * microfrontend.
  */
-import { getAsyncLifecycle, defineConfigSchema } from '@openmrs/esm-framework';
+import { getAsyncLifecycle, defineConfigSchema, getSyncLifecycle } from '@openmrs/esm-framework';
 import { configSchema } from './config-schema';
+import { createLeftPanelLink } from './left-panel-link.component';
 
 const moduleName = '@openmrs/esm-data-import-app';
 
@@ -39,3 +40,8 @@ export function startupApp() {
  */
 export const root = getAsyncLifecycle(() => import('./root.component'), options);
 export const adminDataImportCardLink = getAsyncLifecycle(() => import('./admin-data-import-card-link.component'), options);
+
+// Register navigation items as extensions
+export const homeNavItem = getSyncLifecycle(createLeftPanelLink({name: 'data-import', title: 'Overview'}), options);
+export const generateTemplateNavItem = getSyncLifecycle(createLeftPanelLink({name: 'generate-template', title: 'Generate Excel Template'}), options);
+export const excelImportNavItem = getSyncLifecycle(createLeftPanelLink({name: 'excel-import', title: 'Excel Import'}), options);

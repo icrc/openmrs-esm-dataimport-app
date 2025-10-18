@@ -14,6 +14,7 @@ import type { TemplateOptions } from '../types';
 import { useGetAllForms } from '../hooks/useGetAllForms';
 import { useGenerateTemplate } from '../hooks/useGenerateTemplate';
 import { showToast, showNotification } from '@openmrs/esm-framework';
+import Header from '../header/header.component';
 import styles from './generate-template.scss';
 
 const GenerateTemplate: React.FC = () => {
@@ -97,7 +98,11 @@ const GenerateTemplate: React.FC = () => {
 
   return (
     <div className={styles.generateTemplate}>
-      <Grid className={styles.grid}>
+      <div className="pageHeader">
+        <Header title={t('generateExcelTemplate', 'Generate Excel Template')} />
+      </div>
+      <div className="mainContent">
+        <Grid className="componentGrid">
         <Column lg={5} md={4} sm={4}>
           <Tile className={styles.sectionTile}>
             <h3 className={styles.sectionTitle}>{t('selectForms', 'Select Forms')}</h3>
@@ -188,6 +193,7 @@ const GenerateTemplate: React.FC = () => {
           </Tile>
         </Column>
       </Grid>
+      </div>
     </div>
   );
 };

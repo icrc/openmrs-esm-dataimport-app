@@ -9,6 +9,21 @@
       "name": "admin-data-import-card-link",
       "slot": "system-admin-page-card-link-slot",
       "component": "adminDataImportCardLink"
+    },
+    {
+      "name": "home-nav-item",
+      "slot": "data-import-left-panel-slot",
+      "component": "homeNavItem"
+    },
+    {
+      "name": "generate-template-nav-item",
+      "slot": "data-import-left-panel-slot",
+      "component": "generateTemplateNavItem"
+    },
+    {
+      "name": "excel-import-nav-item",
+      "slot": "data-import-left-panel-slot",
+      "component": "excelImportNavItem"
     }
   ],
   "pages": [
