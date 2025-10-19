@@ -40,9 +40,11 @@ const GenerateTemplate: React.FC = () => {
         includePatientRegistration: templateOptions.includePatientRegistration,
       });
       showToast({
-        description: t('templateGenerated', 'Template generated'),
+        description: t('templateGenerated', 'Excel Template generated successfully'),
         kind: 'success',
       });
+      setSelectedForms([]);
+      setTemplateOptions({ includePatientRegistration: true });
     } catch (e) {
       showNotification({
         title: t('failedToGenerateTemplate', 'Failed to generate template'),
