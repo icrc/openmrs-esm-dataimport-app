@@ -16,7 +16,7 @@ import { useGetAllForms } from '../hooks/useGetAllForms';
 import { useGenerateTemplate } from '../hooks/useGenerateTemplate';
 import { showToast, showNotification } from '@openmrs/esm-framework';
 import Header from '../header/header.component';
-import EmptyDataIllustration from '../components/empty-data-illustration.component';
+import EmptyDataIllustration from '../empty-data-illustration/empty-data-illustration.component';
 import styles from './generate-template.scss';
 
 const GenerateTemplate: React.FC = () => {
@@ -63,13 +63,6 @@ const GenerateTemplate: React.FC = () => {
     let total = selectedForms.length;
     if (templateOptions.includePatientRegistration) total += 1;
     return total;
-  };
-
-  const calculateEstimatedSize = () => {
-    const baseSize = 0.5; // Base size in MB
-    const sheets = calculateTotalSheets();
-    const sizePerSheet = 0.3;
-    return (baseSize + (sheets * sizePerSheet)).toFixed(1);
   };
 
   if (isLoading) {
@@ -193,7 +186,6 @@ const GenerateTemplate: React.FC = () => {
                 </div>
                 <div className={styles.summary}>
                   <p>{t('totalSheets', 'Total sheets')}: {calculateTotalSheets()}</p>
-                  <p>{t('estimatedSize', 'Estimated size')}: ~{calculateEstimatedSize()} MB</p>
                 </div>
               </>
             )}

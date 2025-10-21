@@ -33,42 +33,16 @@
     overflow-y: auto;
     margin-bottom: 1rem;
     padding: 0.25rem;
-    border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    background-color: var(--muted-bg);
   }
 
   .formItem {
     cursor: pointer;
     padding: 0.5rem;
-    margin-bottom: 0.25rem;
-    border-radius: var(--radius-sm);
     transition: all 0.2s ease;
-    border: 1px solid transparent;
-    
-    &:hover {
-      background-color: var(--focus-ring);
-      border-color: var(--border);
-    }
     
     &:focus {
       outline: none;
-      background-color: var(--focus-ring);
-      border-color: var(--border);
-      box-shadow: 0 0 0 2px var(--focus-ring);
-    }
-    
-    &:active {
-      background-color: var(--focus-ring);
-    }
-  }
-
-  .formItemSelected {
-    background-color: var(--muted-bg);
-    border-color: var(--border);
-    
-    &:hover {
-      background-color: var(--focus-ring);
     }
   }
 
