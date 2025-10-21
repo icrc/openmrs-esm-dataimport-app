@@ -8,13 +8,15 @@ import {
   Checkbox,
   Tag,
   Search,
-  InlineLoading
+  InlineLoading,
+  Layer
 } from '@carbon/react';
 import type { TemplateOptions } from '../types';
 import { useGetAllForms } from '../hooks/useGetAllForms';
 import { useGenerateTemplate } from '../hooks/useGenerateTemplate';
 import { showToast, showNotification } from '@openmrs/esm-framework';
 import Header from '../header/header.component';
+import EmptyDataIllustration from '../components/empty-data-illustration.component';
 import styles from './generate-template.scss';
 
 const GenerateTemplate: React.FC = () => {
@@ -98,6 +100,7 @@ const GenerateTemplate: React.FC = () => {
     );
   }
 
+
   return (
     <div className={styles.generateTemplate}>
       <div className="pageHeader">
@@ -108,36 +111,50 @@ const GenerateTemplate: React.FC = () => {
         <Column lg={5} md={4} sm={4}>
           <Tile className={styles.sectionTile}>
             <h3 className={styles.sectionTitle}>{t('selectForms', 'Select Forms')}</h3>
-            <Search
-              labelText={t('searchForms', 'Search forms')}
-              placeholder={t('searchForms', 'Search forms...')}
-              className={styles.search}
-            />
-            <div className={styles.formList}>
-              {forms?.map(form => (
-                <div
-                  key={form.uuid}
-                  className={`${styles.formItem} ${selectedForms.includes(form.uuid) ? styles.formItemSelected : ''}`}
-                  onClick={() => handleFormSelection(form.uuid, !selectedForms.includes(form.uuid))}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      handleFormSelection(form.uuid, !selectedForms.includes(form.uuid));
-                    }
-                  }}
-                >
-                  <Checkbox
-                    id={form.uuid}
-                    labelText={form.name}
-                    checked={selectedForms.includes(form.uuid)}
-                    onChange={() => {}} // Handled by the parent div click
-                    className={styles.formCheckbox}
-                  />
+            {!forms || forms.length === 0 ? (
+              <Layer>
+                <Tile className={styles.emptyStateTile} data-openmrs-role="Forms Empty tile">
+                  <div className={styles.illo}>
+                    <EmptyDataIllustration />
+                  </div>
+                  <p className={styles.content}>{t('noFormsInList', 'There are no forms available in the system')}</p>
+                  <p className={styles.subContent}>{t('contactAdmin', 'Contact your system administrator to add forms or check your permissions')}</p>
+                </Tile>
+              </Layer>
+            ) : (
+              <>
+                <Search
+                  labelText={t('searchForms', 'Search forms')}
+                  placeholder={t('searchForms', 'Search forms...')}
+                  className={styles.search}
+                />
+                <div className={styles.formList}>
+                  {forms.map(form => (
+                    <div
+                      key={form.uuid}
+                      className={`${styles.formItem} ${selectedForms.includes(form.uuid) ? styles.formItemSelected : ''}`}
+                      onClick={() => handleFormSelection(form.uuid, !selectedForms.includes(form.uuid))}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          handleFormSelection(form.uuid, !selectedForms.includes(form.uuid));
+                        }
+                      }}
+                    >
+                      <Checkbox
+                        id={form.uuid}
+                        labelText={form.name}
+                        checked={selectedForms.includes(form.uuid)}
+                        onChange={() => {}}
+                        className={styles.formCheckbox}
+                      />
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </>
+            )}
           </Tile>
         </Column>
 

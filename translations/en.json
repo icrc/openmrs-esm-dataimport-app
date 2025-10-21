@@ -48,5 +48,8 @@
   "searchPatients": "Search patients by ID, name, DOB...",
   "globalProperties": "Global Properties",
   "generatingTemplate": "Generating Template",
-  "generatingTemplateDescription": "Creating your Excel template..."
+  "generatingTemplateDescription": "Creating your Excel template...",
+  "noFormsAvailable": "No forms available",
+  "noFormsInList": "There are no forms available in the system",
+  "contactAdmin": "Contact your system administrator to add forms or check your permissions"
 }
