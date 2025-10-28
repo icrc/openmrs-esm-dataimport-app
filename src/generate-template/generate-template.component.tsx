@@ -28,10 +28,18 @@ const GenerateTemplate: React.FC = () => {
   const [selectedForms, setSelectedForms] = useState<string[]>([]);
   const [templateOptions, setTemplateOptions] = useState<TemplateOptions>({includePatientRegistration: true});
   const [isGenerating, setIsGenerating] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const { locations, isLoading: isLoadingLocations, error: locationsError } = useGetAllLocations();
   const locationItems = useMemo(() =>
     (locations || []).map((l) => ({ uuid: l.uuid, label: l.display || l.name })),
   [locations]);
+
+  const filteredForms = useMemo(() => {
+    if (!searchTerm.trim()) return forms || [];
+    return (forms || []).filter(form => 
+      form.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [forms, searchTerm]);
 
   const handleFormSelection = (formUuid: string, checked: boolean) => {
     if (checked) {
@@ -127,9 +135,11 @@ const GenerateTemplate: React.FC = () => {
                   labelText={t('searchForms', 'Search forms')}
                   placeholder={t('searchForms', 'Search forms...')}
                   className={styles.search}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 <div className={styles.formList}>
-                  {forms.map(form => (
+                  {filteredForms.map(form => (
                     <div
                       key={form.uuid}
                       className={`${styles.formItem} ${selectedForms.includes(form.uuid) ? styles.formItemSelected : ''}`}
