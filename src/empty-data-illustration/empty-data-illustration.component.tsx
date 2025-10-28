@@ -1,5 +1,5 @@
 import React from 'react';
-import { Document } from '@carbon/icons-react';
+import { Document } from '@carbon/react/icons';
 import styles from './empty-data-illustration.scss';
 
 const EmptyDataIllustration: React.FC = () => {
