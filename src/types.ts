@@ -8,6 +8,7 @@ export interface Form {
 export interface TemplateOptions {
   includePatientRegistration: boolean;
   // filenamePattern: string;
+  locationUuid?: string;
 }
 
 export interface ImportOptions {
