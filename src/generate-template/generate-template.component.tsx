@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
@@ -9,12 +9,14 @@ import {
   Tag,
   Search,
   InlineLoading,
-  Layer
+  Layer,
+  ComboBox
 } from '@carbon/react';
 import type { TemplateOptions } from '../types';
 import { useGetAllForms } from '../hooks/useGetAllForms';
 import { useGenerateTemplate } from '../hooks/useGenerateTemplate';
-import { showToast, showNotification } from '@openmrs/esm-framework';
+import { useGetAllLocations } from '../hooks/useGetAllLocations';
+import { showSnackbar, showNotification } from '@openmrs/esm-framework';
 import Header from '../header/header.component';
 import EmptyDataIllustration from '../empty-data-illustration/empty-data-illustration.component';
 import styles from './generate-template.scss';
@@ -26,6 +28,10 @@ const GenerateTemplate: React.FC = () => {
   const [selectedForms, setSelectedForms] = useState<string[]>([]);
   const [templateOptions, setTemplateOptions] = useState<TemplateOptions>({includePatientRegistration: true});
   const [isGenerating, setIsGenerating] = useState(false);
+  const { locations, isLoading: isLoadingLocations, error: locationsError } = useGetAllLocations();
+  const locationItems = useMemo(() =>
+    (locations || []).map((l) => ({ uuid: l.uuid, label: l.display || l.name })),
+  [locations]);
 
   const handleFormSelection = (formUuid: string, checked: boolean) => {
     if (checked) {
@@ -40,19 +46,20 @@ const GenerateTemplate: React.FC = () => {
       setIsGenerating(true);
       await generate(selectedForms, {
         includePatientRegistration: templateOptions.includePatientRegistration,
+        locationUuid: templateOptions.locationUuid,
       });
-      showToast({
-        description: t('templateGenerated', 'Excel Template generated successfully'),
+      showSnackbar({
+        title: t('templateAdded', 'Template Generated Successfully'),
+        subtitle: t('templateGenerated', 'Excel Template generated successfully'),
         kind: 'success',
       });
       setSelectedForms([]);
       setTemplateOptions({ includePatientRegistration: true });
     } catch (e) {
-      showNotification({
+      showSnackbar({
         title: t('failedToGenerateTemplate', 'Failed to generate template'),
-        description: (e as Error)?.message || 'Unknown error',
+        subtitle: (e as Error)?.message || 'Unknown error',
         kind: 'error',
-        critical: true,
       });
     } finally {
       setIsGenerating(false);
@@ -163,6 +170,32 @@ const GenerateTemplate: React.FC = () => {
                 checked={templateOptions.includePatientRegistration}
                 onChange={(event, { checked }) => setTemplateOptions({...templateOptions, includePatientRegistration: checked})}
               />
+            </div>
+
+            <div className={styles.optionGroup}>
+              <h4>{t('selectLocation', 'Select location')}</h4>
+              {isLoadingLocations ? (
+                <InlineLoading description={t('loadingLocations', 'Loading locations...')} />
+              ) : locationsError ? (
+                <p>{t('errorLoadingLocations', 'Error loading locations')}</p>
+              ) : (
+                <ComboBox
+                  id="location-selector"
+                  titleText={t('location', 'Location')}
+                  placeholder={t('searchLocations', 'Search locations')}
+                  items={locationItems}
+                  itemToString={(item) => (item ? (item as { label?: string }).label || '' : '')}
+                  selectedItem={locationItems.find((l) => l.uuid === templateOptions.locationUuid) || null}
+                  onChange={({ selectedItem }) => {
+                    const selected = selectedItem as { uuid?: string } | null;
+                    setTemplateOptions({ ...templateOptions, locationUuid: selected?.uuid });
+                  }}
+                  shouldFilterItem={(data) => {
+                    const text = ((data?.item as { label?: string })?.label || '').toLowerCase();
+                    return text.includes((data?.inputValue || '').toLowerCase());
+                  }}
+                />
+              )}
             </div>
           </Tile>
         </Column>

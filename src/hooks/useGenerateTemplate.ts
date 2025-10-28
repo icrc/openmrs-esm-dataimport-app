@@ -4,10 +4,12 @@ import { useCallback, useState } from 'react';
 interface UiTemplateOptions {
   includePatientRegistration: boolean;
   filename?: string;
+  locationUuid?: string;
 }
 
 interface ServerTemplateOptions {
   includePatient?: boolean;
+  locationUuid?: string;
 }
 
 export function useGenerateTemplate() {
@@ -24,6 +26,7 @@ export function useGenerateTemplate() {
         formUuids,
         options: {
           includePatient: options?.includePatientRegistration,
+          locationUuid: options?.locationUuid,
         } as ServerTemplateOptions,
       };
 
