@@ -20,7 +20,7 @@ function LinkExtension({ config }: { config: LinkConfig }) {
     const regex = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/;
     return regex.test(value);
   };
-  
+
   if (isUUID(urlSegment)) {
     urlSegment = 'data-import';
   }
@@ -29,7 +29,8 @@ function LinkExtension({ config }: { config: LinkConfig }) {
     <UserHasAccess privilege={PRIVILEGE_MANAGE_DATA_IMPORT}>
       <ConfigurableLink
         to={`${window.getOpenmrsSpaBase()}data-import${name && name !== 'data-import' ? `/${name}` : ''}`}
-        className={classNames('cds--side-nav__link', name === urlSegment && 'active-left-nav-link')}>
+        className={classNames('cds--side-nav__link', name === urlSegment && 'active-left-nav-link')}
+      >
         {title}
       </ConfigurableLink>
     </UserHasAccess>

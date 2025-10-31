@@ -24,5 +24,3 @@ export function useGetAllLocations() {
 }
 
 export default useGetAllLocations;
-
-

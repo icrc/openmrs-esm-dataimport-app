@@ -12,10 +12,7 @@ const LeftPanel: React.FC = () => {
 
   return (
     isDesktop(layout) && (
-      <SideNav
-        aria-label={t('dataImportLeftPanel', 'Data Import left panel')}
-        className={styles.leftPanel}
-        expanded>
+      <SideNav aria-label={t('dataImportLeftPanel', 'Data Import left panel')} className={styles.leftPanel} expanded>
         <ExtensionSlot name="data-import-left-panel-slot" />
       </SideNav>
     )
