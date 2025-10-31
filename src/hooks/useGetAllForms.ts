@@ -13,12 +13,7 @@ export function useGetAllForms(cachedOfflineFormsOnly = false) {
   const url = showHtmlFormEntryForms ? formEncounterUrl : formEncounterUrlPoc;
   const { data, error } = useSWR([url, cachedOfflineFormsOnly], async () => {
     const res = await openmrsFetch(url);
-    const forms =
-      res.data?.results?.filter(
-        (form) =>
-          form.published &&
-          !/component/i.test(form.name),
-      ) ?? [];
+    const forms = res.data?.results?.filter((form) => form.published && !/component/i.test(form.name)) ?? [];
 
     return forms;
   });

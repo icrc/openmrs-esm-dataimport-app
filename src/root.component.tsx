@@ -8,7 +8,6 @@ import Home from './home.component';
 import styles from './root.scss';
 import { PRIVILEGE_MANAGE_DATA_IMPORT } from './constants';
 
-
 const Root: React.FC = () => {
   const spaBasePath = window.spaBase;
   const dataImportBasename = window.getOpenmrsSpaBase() + 'data-import';

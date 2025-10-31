@@ -1,13 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Calendar, Location } from '@carbon/react/icons';
-import {
-  ConfigurableLink,
-  formatDate,
-  PageHeader,
-  PageHeaderContent,
-  useSession,
-} from '@openmrs/esm-framework';
+import { ConfigurableLink, formatDate, PageHeader, PageHeaderContent, useSession } from '@openmrs/esm-framework';
 import styles from './header.scss';
 
 type HeaderProps = {
