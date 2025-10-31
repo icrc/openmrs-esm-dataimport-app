@@ -1,3 +1,5 @@
+export const PRIVILEGE_MANAGE_DATA_IMPORT = 'Manage Data Import';
+
 export const SUPPORTED_FILE_TYPES = ['.xlsx', '.xls', '.csv'];
 
 export const LANGUAGES = [
