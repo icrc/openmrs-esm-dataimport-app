@@ -2,7 +2,8 @@ import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { last } from 'lodash-es';
 import { BrowserRouter, useLocation } from 'react-router-dom';
-import { ConfigurableLink } from '@openmrs/esm-framework';
+import { ConfigurableLink, UserHasAccess } from '@openmrs/esm-framework';
+import { PRIVILEGE_MANAGE_DATA_IMPORT } from './constants';
 
 export interface LinkConfig {
   name: string;
@@ -25,11 +26,13 @@ function LinkExtension({ config }: { config: LinkConfig }) {
   }
 
   return (
-    <ConfigurableLink
-      to={`${window.getOpenmrsSpaBase()}data-import${name && name !== 'data-import' ? `/${name}` : ''}`}
-      className={classNames('cds--side-nav__link', name === urlSegment && 'active-left-nav-link')}>
-      {title}
-    </ConfigurableLink>
+    <UserHasAccess privilege={PRIVILEGE_MANAGE_DATA_IMPORT}>
+      <ConfigurableLink
+        to={`${window.getOpenmrsSpaBase()}data-import${name && name !== 'data-import' ? `/${name}` : ''}`}
+        className={classNames('cds--side-nav__link', name === urlSegment && 'active-left-nav-link')}>
+        {title}
+      </ConfigurableLink>
+    </UserHasAccess>
   );
 }
 
