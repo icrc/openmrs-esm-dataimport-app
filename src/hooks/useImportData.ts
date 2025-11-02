@@ -91,9 +91,41 @@ export function useImportData() {
     }
   }, []);
 
+  const downloadQuarantineReport = useCallback(async (file: File, batchId: string): Promise<void> => {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('batchId', batchId);
+
+      const url = `${restBaseUrl}/dataimport/quarantine-report.xlsx`;
+
+      const response = await openmrsFetch<Response>(url, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          Accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        },
+      });
+
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = `quarantine_report_${batchId}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(downloadUrl);
+    } catch (e) {
+      const error = e as Error;
+      throw error;
+    }
+  }, []);
+
   return {
     performDryRun,
     commitImport,
+    downloadQuarantineReport,
     isDryRunning,
     isImporting,
     dryRunError,
