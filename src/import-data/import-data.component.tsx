@@ -27,7 +27,8 @@ import styles from './import-data.scss';
 const ImportData: React.FC = () => {
   const { t } = useTranslation();
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const { performDryRun, commitImport, downloadQuarantineReport, isDryRunning, isImporting, dryRunError, importError } = useImportData();
+  const { performDryRun, commitImport, downloadQuarantineReport, isDryRunning, isImporting, dryRunError, importError } =
+    useImportData();
   const [dryRunResult, setDryRunResult] = useState<DryRunResponse | null>(null);
   const [commitResult, setCommitResult] = useState<CommitResponse | null>(null);
   const [currentBatchId, setCurrentBatchId] = useState<string | null>(null);
@@ -263,7 +264,7 @@ const ImportData: React.FC = () => {
                           </TableContainer>
                         )}
                       </DataTable>
-                      
+
                       <div className={styles.actionButtons}>
                         <Button kind="primary" onClick={handleDownloadQuarantineReport}>
                           Download Quarantine Report (Excel)
@@ -289,7 +290,11 @@ const ImportData: React.FC = () => {
                         <Button kind="secondary" onClick={handleReset} className={styles.actionButton}>
                           Clear
                         </Button>
-                        <Button disabled={isImporting || dryRunResult.stats.okRows === 0} onClick={handleImport} className={styles.actionButton}>
+                        <Button
+                          disabled={isImporting || dryRunResult.stats.okRows === 0}
+                          onClick={handleImport}
+                          className={styles.actionButton}
+                        >
                           {isImporting ? <InlineLoading description="Importing..." /> : 'Start Import'}
                         </Button>
                       </div>
