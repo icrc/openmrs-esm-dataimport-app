@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
@@ -16,17 +16,17 @@ import {
   TableBody,
   TableCell,
 } from '@carbon/react';
-import { Download, DocumentAdd } from '@carbon/react/icons';
+import { Download } from '@carbon/react/icons';
 import { showSnackbar } from '@openmrs/esm-framework';
 import type { DryRunResponse, CommitResponse } from '../types';
 import { SUPPORTED_FILE_TYPES } from '../constants';
 import { useImportData } from '../hooks/useImportData';
 import Header from '../header/header.component';
+import FileSelector from '../file-selector/file-selector.component';
 import styles from './import-data.scss';
 
 const ImportData: React.FC = () => {
   const { t } = useTranslation();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const { performDryRun, commitImport, downloadQuarantineReport, isDryRunning, isImporting, dryRunError, importError } =
     useImportData();
@@ -115,23 +115,10 @@ const ImportData: React.FC = () => {
   };
 
   const handleRemoveFile = () => {
-    setUploadedFile(null);
     setDryRunResult(null);
     setCommitResult(null);
     setCurrentBatchId(null);
     setImportStarted(false);
-  };
-
-  const handleFileButtonClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] || null;
-    setUploadedFile(file);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
   };
 
   const getIssueSeverity = (code: string): 'error' | 'warning' | 'info' => {
@@ -161,7 +148,7 @@ const ImportData: React.FC = () => {
         <Grid className="componentGrid">
           <Column lg={16} md={8} sm={4}>
             <Tile className={styles.sectionTile}>
-              <h3 className={styles.sectionTitle}>1. {t('uploadFile', 'Upload File')}</h3>
+              <h3 className={styles.sectionTitle}>{t('uploadFile', 'Upload File')}</h3>
               <p className={styles.instructions}>
                 {t(
                   'uploadInstructions',
@@ -173,33 +160,28 @@ const ImportData: React.FC = () => {
                 {t('supportedFormatsList', 'Excel (.xlsx, .xls) files.')}
               </p>
 
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept={SUPPORTED_FILE_TYPES.join(',')}
-                onChange={handleFileInputChange}
-                style={{ display: 'none' }}
-                disabled={importStarted}
-              />
-
               {uploadedFile && (
                 <div className={styles.fileInfo}>
-                  <Tag filter type="gray" onClose={handleRemoveFile}>
+                  <Tag
+                    filter
+                    type="teal"
+                    onClose={handleRemoveFile}
+                    style={{ backgroundColor: 'var(--brand-teal)', color: 'white' }}
+                  >
                     {uploadedFile.name} ({(uploadedFile.size / 1024 / 1024).toFixed(2)} MB)
                   </Tag>
                 </div>
               )}
 
               <div className={styles.actionButtons}>
-                <Button
-                  kind="secondary"
-                  onClick={handleFileButtonClick}
-                  className={styles.actionButton}
+                <FileSelector
+                  selectedFile={uploadedFile}
+                  onFileSelect={setUploadedFile}
+                  onRemoveFile={handleRemoveFile}
                   disabled={importStarted}
-                  renderIcon={DocumentAdd}
-                >
-                  {t('selectFile', 'Select File')}
-                </Button>
+                  supportedFileTypes={SUPPORTED_FILE_TYPES}
+                />
+
                 <Button
                   kind="primary"
                   disabled={!uploadedFile || isDryRunning || importStarted}
@@ -218,22 +200,22 @@ const ImportData: React.FC = () => {
 
           <Column lg={16} md={8} sm={4}>
             <Tile className={styles.sectionTile}>
-              <h3 className={styles.sectionTitle}>2. Validation Results</h3>
+              <h3 className={styles.sectionTitle}>{t('validationResults', 'Validation Results')}</h3>
 
               {dryRunResult ? (
                 <>
                   <div className={styles.statsSummary}>
                     <div className={styles.statsGrid}>
                       <div className={styles.statItem}>
-                        <span className={styles.statLabel}>Total Rows:</span>
+                        <span className={styles.statLabel}>{t('totalRows', 'Total Rows')}:</span>
                         <span className={styles.statValue}>{dryRunResult.stats.totalRows}</span>
                       </div>
                       <div className={`${styles.statItem} ${styles.success}`}>
-                        <span className={styles.statLabel}>Valid Rows:</span>
+                        <span className={styles.statLabel}>{t('validRows', 'Valid Rows')}:</span>
                         <span className={styles.statValue}>{dryRunResult.stats.okRows}</span>
                       </div>
                       <div className={`${styles.statItem} ${styles.warning}`}>
-                        <span className={styles.statLabel}>Quarantined Rows:</span>
+                        <span className={styles.statLabel}>{t('quarantinedRows', 'Quarantined Rows')}:</span>
                         <span className={styles.statValue}>{dryRunResult.stats.quarantinedRows}</span>
                       </div>
                     </div>
@@ -241,7 +223,7 @@ const ImportData: React.FC = () => {
 
                   {dryRunResult.issues.length > 0 && (
                     <div className={styles.validationIssues}>
-                      <h4>Validation Issues</h4>
+                      <h4>{t('validationIssues', 'Validation Issues')}</h4>
                       <DataTable
                         rows={dryRunResult.issues.map((issue, index) => ({
                           id: index.toString(),
@@ -309,7 +291,7 @@ const ImportData: React.FC = () => {
                           className={styles.downloadButton}
                           renderIcon={Download}
                         >
-                          Download Quarantine Report (Excel)
+                          {t('downloadQuarantineReport', 'Download Quarantine Report (Excel)')}
                         </Button>
                       </div>
                     </div>
@@ -317,9 +299,10 @@ const ImportData: React.FC = () => {
 
                   {dryRunResult && !importStarted && (
                     <div className={styles.commitSummary}>
-                      <h4>Import Confirmation</h4>
+                      <h4>{t('importConfirmation', 'Import Confirmation')}</h4>
                       <p>
-                        Ready to import <strong>{dryRunResult.stats.okRows}</strong> valid rows.
+                        {t('readyToImport', 'Ready to import')} <strong>{dryRunResult.stats.okRows}</strong>{' '}
+                        {t('validRows', 'valid rows')}.
                       </p>
                       {dryRunResult.stats.quarantinedRows > 0 && (
                         <p className={styles.warningText}>
@@ -330,7 +313,7 @@ const ImportData: React.FC = () => {
 
                       <div className={styles.actionButtons}>
                         <Button kind="secondary" onClick={handleReset} className={styles.actionButton}>
-                          Clear
+                          {t('clear', 'Clear')}
                         </Button>
                         <Button
                           disabled={isImporting || dryRunResult.stats.okRows === 0}
@@ -346,18 +329,18 @@ const ImportData: React.FC = () => {
                   {commitResult && (
                     <div className={styles.importResults}>
                       <div className={styles.resultsSummary}>
-                        <h4>Import Complete</h4>
+                        <h4>{t('importComplete', 'Import Complete')}</h4>
                         <div className={styles.statsGrid}>
                           <div className={styles.statItem}>
-                            <span className={styles.statLabel}>Total Processed:</span>
+                            <span className={styles.statLabel}>{t('totalProcessed', 'Total Processed')}:</span>
                             <span className={styles.statValue}>{commitResult.summary.totalProcessed}</span>
                           </div>
                           <div className={`${styles.statItem} ${styles.success}`}>
-                            <span className={styles.statLabel}>Successful:</span>
+                            <span className={styles.statLabel}>{t('successful', 'Successful')}:</span>
                             <span className={styles.statValue}>{commitResult.summary.successful}</span>
                           </div>
                           <div className={`${styles.statItem} ${styles.error}`}>
-                            <span className={styles.statLabel}>Failed:</span>
+                            <span className={styles.statLabel}>{t('failed', 'Failed')}:</span>
                             <span className={styles.statValue}>{commitResult.summary.failed}</span>
                           </div>
                         </div>
@@ -365,7 +348,7 @@ const ImportData: React.FC = () => {
 
                       {commitResult.results.length > 0 && (
                         <div className={styles.resultsDetails}>
-                          <h4>Import Details</h4>
+                          <h4>{t('importDetails', 'Import Details')}</h4>
                           <DataTable
                             rows={commitResult.results.map((result, index) => ({
                               id: index.toString(),
@@ -418,7 +401,9 @@ const ImportData: React.FC = () => {
                   )}
                 </>
               ) : (
-                <p className={styles.emptyState}>Upload a file and run validation to see results here.</p>
+                <p className={styles.emptyState}>
+                  {t('uploadFileAndRunValidation', 'Upload a file and run validation to see results here.')}
+                </p>
               )}
             </Tile>
           </Column>
