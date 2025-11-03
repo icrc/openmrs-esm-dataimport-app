@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
   Grid,
   Column,
   Tile,
-  FileUploader,
   Tag,
   InlineLoading,
   DataTable,
@@ -17,6 +16,7 @@ import {
   TableBody,
   TableCell,
 } from '@carbon/react';
+import { Download, DocumentAdd } from '@carbon/react/icons';
 import { showSnackbar } from '@openmrs/esm-framework';
 import type { DryRunResponse, CommitResponse } from '../types';
 import { SUPPORTED_FILE_TYPES } from '../constants';
@@ -26,6 +26,7 @@ import styles from './import-data.scss';
 
 const ImportData: React.FC = () => {
   const { t } = useTranslation();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const { performDryRun, commitImport, downloadQuarantineReport, isDryRunning, isImporting, dryRunError, importError } =
     useImportData();
@@ -121,6 +122,18 @@ const ImportData: React.FC = () => {
     setImportStarted(false);
   };
 
+  const handleFileButtonClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] || null;
+    setUploadedFile(file);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const getIssueSeverity = (code: string): 'error' | 'warning' | 'info' => {
     if (code.includes('REQUIRED') || code.includes('INVALID')) return 'error';
     if (code.includes('FUTURE') || code.includes('TOO_LONG')) return 'warning';
@@ -149,16 +162,23 @@ const ImportData: React.FC = () => {
           <Column lg={16} md={8} sm={4}>
             <Tile className={styles.sectionTile}>
               <h3 className={styles.sectionTitle}>1. {t('uploadFile', 'Upload File')}</h3>
-              <FileUploader
-                labelTitle={t('uploadFileLabel', 'Upload files')}
-                labelDescription={t(
-                  'uploadFileDescription',
-                  'Choose files or drag and drop files here. Only .xlsx, .xls, and .csv files are supported.',
+              <p className={styles.instructions}>
+                {t(
+                  'uploadInstructions',
+                  'Click "Select File" to choose an Excel to import. Once selected, click "Run Validation" to validate your data before importing.',
                 )}
-                accept={SUPPORTED_FILE_TYPES}
-                filenameStatus="edit"
-                onChange={(event) => setUploadedFile(event.target.files?.[0] || null)}
-                className={styles.fileUploader}
+              </p>
+              <p className={styles.fileFormatNote}>
+                <strong>{t('supportedFormats', 'Supported file formats')}:</strong>{' '}
+                {t('supportedFormatsList', 'Excel (.xlsx, .xls) files.')}
+              </p>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept={SUPPORTED_FILE_TYPES.join(',')}
+                onChange={handleFileInputChange}
+                style={{ display: 'none' }}
                 disabled={importStarted}
               />
 
@@ -171,6 +191,15 @@ const ImportData: React.FC = () => {
               )}
 
               <div className={styles.actionButtons}>
+                <Button
+                  kind="secondary"
+                  onClick={handleFileButtonClick}
+                  className={styles.actionButton}
+                  disabled={importStarted}
+                  renderIcon={DocumentAdd}
+                >
+                  {t('selectFile', 'Select File')}
+                </Button>
                 <Button
                   kind="primary"
                   disabled={!uploadedFile || isDryRunning || importStarted}
@@ -265,8 +294,21 @@ const ImportData: React.FC = () => {
                         )}
                       </DataTable>
 
+                      <div className={styles.quarantineInfo}>
+                        <p className={styles.infoText}>
+                          {t(
+                            'quarantineReportInfo',
+                            'The quarantine report contains all rows with validation errors. Download it to review and fix issues, then re-upload the corrected file.',
+                          )}
+                        </p>
+                      </div>
                       <div className={styles.actionButtons}>
-                        <Button kind="primary" onClick={handleDownloadQuarantineReport}>
+                        <Button
+                          kind="secondary"
+                          onClick={handleDownloadQuarantineReport}
+                          className={styles.downloadButton}
+                          renderIcon={Download}
+                        >
                           Download Quarantine Report (Excel)
                         </Button>
                       </div>
