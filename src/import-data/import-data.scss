@@ -221,6 +221,15 @@
 
   .fileInfo {
     margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .fileActions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-top: 0.5rem;
   }
 
   .optionGroup {
