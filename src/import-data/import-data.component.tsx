@@ -173,7 +173,7 @@ const ImportData: React.FC = () => {
                 </div>
               )}
 
-              <div className={styles.fileActions}>
+              <div className={styles.actionButtons}>
                 <FileSelector
                   selectedFile={uploadedFile}
                   onFileSelect={setUploadedFile}
@@ -301,7 +301,8 @@ const ImportData: React.FC = () => {
                     <div className={styles.commitSummary}>
                       <h4>{t('importConfirmation', 'Import Confirmation')}</h4>
                       <p>
-                        {t('readyToImport', 'Ready to import')} <strong>{dryRunResult.stats.okRows}</strong> {t('validRows', 'valid rows')}.
+                        {t('readyToImport', 'Ready to import')} <strong>{dryRunResult.stats.okRows}</strong>{' '}
+                        {t('validRows', 'valid rows')}.
                       </p>
                       {dryRunResult.stats.quarantinedRows > 0 && (
                         <p className={styles.warningText}>
@@ -400,7 +401,9 @@ const ImportData: React.FC = () => {
                   )}
                 </>
               ) : (
-                <p className={styles.emptyState}>{t('uploadFileAndRunValidation', 'Upload a file and run validation to see results here.')}</p>
+                <p className={styles.emptyState}>
+                  {t('uploadFileAndRunValidation', 'Upload a file and run validation to see results here.')}
+                </p>
               )}
             </Tile>
           </Column>
