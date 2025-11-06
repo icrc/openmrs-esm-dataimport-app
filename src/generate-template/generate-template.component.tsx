@@ -37,6 +37,10 @@ const GenerateTemplate: React.FC = () => {
     }
   };
 
+  const handleRemoveForm = (formUuid: string) => {
+    setSelectedForms(selectedForms.filter((uuid) => uuid !== formUuid));
+  };
+
   const handleGenerateTemplate = async () => {
     try {
       setIsGenerating(true);
@@ -212,7 +216,7 @@ const GenerateTemplate: React.FC = () => {
                     {selectedForms.map((uuid) => {
                       const form = forms.find((f) => f.uuid === uuid);
                       return form ? (
-                        <Tag key={uuid} type="blue" size="sm">
+                        <Tag key={uuid} type="blue" size="sm" filter onClose={() => handleRemoveForm(uuid)}>
                           {form.name}
                         </Tag>
                       ) : null;
