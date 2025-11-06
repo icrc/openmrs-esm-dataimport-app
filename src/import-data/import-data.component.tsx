@@ -115,6 +115,7 @@ const ImportData: React.FC = () => {
   };
 
   const handleRemoveFile = () => {
+    setUploadedFile(null);
     setDryRunResult(null);
     setCommitResult(null);
     setCurrentBatchId(null);
@@ -164,7 +165,7 @@ const ImportData: React.FC = () => {
                 <div className={styles.fileInfo}>
                   <Tag
                     filter
-                    type="teal"
+                    type="gray"
                     onClose={handleRemoveFile}
                     style={{ backgroundColor: 'var(--brand-teal)', color: 'white' }}
                   >
