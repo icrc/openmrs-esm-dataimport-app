@@ -9,6 +9,7 @@ export interface TemplateOptions {
   includePatientRegistration: boolean;
   // filenamePattern: string;
   locationUuid?: string;
+  filename?: string;
 }
 
 export interface ImportOptions {

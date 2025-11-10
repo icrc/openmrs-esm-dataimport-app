@@ -1,6 +1,18 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Grid, Column, Tile, Checkbox, Tag, Search, InlineLoading, Layer, ComboBox } from '@carbon/react';
+import {
+  Button,
+  Grid,
+  Column,
+  Tile,
+  Checkbox,
+  Tag,
+  Search,
+  InlineLoading,
+  Layer,
+  ComboBox,
+  TextInput,
+} from '@carbon/react';
 import type { TemplateOptions } from '../types';
 import { useGetAllForms } from '../hooks/useGetAllForms';
 import { useGenerateTemplate } from '../hooks/useGenerateTemplate';
@@ -47,6 +59,7 @@ const GenerateTemplate: React.FC = () => {
       await generate(selectedForms, {
         includePatientRegistration: templateOptions.includePatientRegistration,
         locationUuid: templateOptions.locationUuid,
+        filename: templateOptions.filename,
       });
       showSnackbar({
         title: t('templateAdded', 'Template Generated Successfully'),
@@ -201,6 +214,18 @@ const GenerateTemplate: React.FC = () => {
                     }}
                   />
                 )}
+              </div>
+
+              <div className={styles.optionGroup}>
+                <h4>{t('filename', 'File name')}</h4>
+                <TextInput
+                  id="template-filename"
+                  labelText={t('filenameLabel', 'File name')}
+                  placeholder={t('enterFilename', 'Enter file name (optional)')}
+                  value={templateOptions.filename || ''}
+                  onChange={(event) => setTemplateOptions({ ...templateOptions, filename: event.target.value })}
+                  helperText={t('filenameHelper', 'Default is o3_form_template.xlsx')}
+                />
               </div>
             </Tile>
           </Column>
