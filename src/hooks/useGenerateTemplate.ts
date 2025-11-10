@@ -17,6 +17,14 @@ export function useGenerateTemplate() {
   const [error, setError] = useState<Error | null>(null);
 
   const generate = useCallback(async (formUuids: string[], options: UiTemplateOptions) => {
+    const ensureXlsxExtension = (name?: string) => {
+      const trimmed = name?.trim() || '';
+      if (!trimmed) {
+        return 'o3_form_template.xlsx';
+      }
+      return trimmed.toLowerCase().endsWith('.xlsx') ? trimmed : `${trimmed}.xlsx`;
+    };
+
     setError(null);
     setIsGenerating(true);
 
@@ -44,10 +52,13 @@ export function useGenerateTemplate() {
 
       const blob = await response.blob();
       const contentDisposition = response.headers.get('content-disposition') || '';
-      let filename = options?.filename || 'o3_form_template.xlsx';
-      const match = contentDisposition.match(/filename\*=UTF-8''([^;]+)|filename="?([^";]+)"?/i);
-      if (match) {
-        filename = decodeURIComponent(match[1] || match[2]);
+      let filename = ensureXlsxExtension(options?.filename);
+
+      if (!options?.filename) {
+        const match = contentDisposition.match(/filename\*=UTF-8''([^;]+)|filename="?([^";]+)"?/i);
+        if (match) {
+          filename = decodeURIComponent(match[1] || match[2]);
+        }
       }
 
       const blobUrl = window.URL.createObjectURL(blob);
