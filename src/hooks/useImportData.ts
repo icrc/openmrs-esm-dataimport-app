@@ -25,13 +25,25 @@ export function useImportData() {
 
       const data = response.data;
 
+      const totals = data.preview?.totals ?? {
+        totalRows: data.stats?.totalRows ?? data.okRows?.length ?? 0,
+        okRows: data.stats?.okRows ?? data.okRows?.length ?? 0,
+        quarantinedRows: data.stats?.quarantinedRows ?? data.quarantinedRows?.length ?? 0,
+      };
+
       return {
         batchId: data.batchId,
         stats: {
-          totalRows: data.stats?.totalRows || 0,
-          okRows: data.okRows?.length || 0,
-          quarantinedRows: data.quarantinedRows?.length || 0,
-          errorRows: 0,
+          totalRows: totals.totalRows,
+          okRows: totals.okRows,
+          quarantinedRows: totals.quarantinedRows,
+          errorRows: totals.quarantinedRows,
+          patientsToCreate: data.stats?.patientsToCreate ?? data.preview?.patients?.new,
+          existingPatientsReferenced: data.stats?.existingPatientsReferenced ?? data.preview?.patients?.existing,
+          blockedPatients: data.stats?.blockedPatients ?? data.preview?.patients?.blocked,
+          encountersToCreate: data.stats?.encountersToCreate ?? data.preview?.encounters?.encountersToCreate,
+          obsToCreate: data.stats?.obsToCreate ?? data.preview?.encounters?.obsToCreate,
+          sheetSummaries: data.stats?.sheetSummaries ?? data.preview?.sheets,
         },
         issues: data.quarantinedRows || [],
         templateMeta: {
@@ -40,6 +52,7 @@ export function useImportData() {
           formCount: 0,
           forms: [],
         },
+        preview: data.preview,
       };
     } catch (e) {
       const error = e as Error;
@@ -67,19 +80,46 @@ export function useImportData() {
 
       const data = response.data;
 
+      const encounters =
+        data.createdEncounterUuids?.map((uuid: string, index: number) => ({
+          patientRef: `Patient-${index + 1}`,
+          status: 'SUCCESS' as const,
+          encounterUuid: uuid,
+          message: 'Successfully imported',
+        })) ?? [];
+
+      const errorResults =
+        data.errors?.map((error, index) => {
+          if (typeof error === 'string') {
+            return {
+              patientRef: `Error-${index + 1}`,
+              status: 'ERROR' as const,
+              message: error,
+            };
+          }
+
+          return {
+            patientRef: error.patientRef || `Error-${index + 1}`,
+            status: 'ERROR' as const,
+            encounterUuid: error.encounterUuid,
+            message: error.message,
+          };
+        }) ?? [];
+
+      const stats = data.stats ?? ({} as NonNullable<typeof data.stats>);
+
       return {
         batchId: data.batchId,
-        results:
-          data.createdEncounterUuids?.map((uuid: string, index: number) => ({
-            patientRef: `Patient-${index + 1}`,
-            status: 'SUCCESS' as const,
-            encounterUuid: uuid,
-            message: 'Successfully imported',
-          })) || [],
+        results: [...encounters, ...errorResults],
         summary: {
-          totalProcessed: data.stats?.totalProcessed || 0,
-          successful: data.createdEncounterUuids?.length || 0,
-          failed: data.errors?.length || 0,
+          totalProcessed: stats.totalProcessed ?? stats.okRows ?? encounters.length,
+          successful: stats.okRows ?? encounters.length,
+          failed: stats.quarantinedRows ?? errorResults.length,
+          patientsToCreate: stats.patientsToCreate,
+          existingPatientsReferenced: stats.existingPatientsReferenced,
+          blockedPatients: stats.blockedPatients,
+          encountersToCreate: stats.encountersToCreate,
+          obsToCreate: stats.obsToCreate,
         },
       };
     } catch (e) {

@@ -26,9 +26,16 @@ export interface DryRunResponse {
     okRows: number;
     quarantinedRows: number;
     errorRows: number;
+    patientsToCreate?: number;
+    existingPatientsReferenced?: number;
+    blockedPatients?: number;
+    encountersToCreate?: number;
+    obsToCreate?: number;
+    sheetSummaries?: SheetSummary[];
   };
   issues: QuarantineItem[];
   templateMeta: TemplateMeta;
+  preview?: PreviewSummary;
 }
 
 export interface QuarantineItem {
@@ -62,6 +69,11 @@ export interface CommitResponse {
     totalProcessed: number;
     successful: number;
     failed: number;
+    patientsToCreate?: number;
+    existingPatientsReferenced?: number;
+    blockedPatients?: number;
+    encountersToCreate?: number;
+    obsToCreate?: number;
   };
 }
 
@@ -78,10 +90,19 @@ export interface BackendDryRunResponse {
   batchId: string;
   stats?: {
     totalRows: number;
+    okRows?: number;
+    quarantinedRows?: number;
+    patientsToCreate?: number;
+    existingPatientsReferenced?: number;
+    blockedPatients?: number;
+    encountersToCreate?: number;
+    obsToCreate?: number;
+    sheetSummaries?: SheetSummary[];
   };
   okRows?: any[];
-  quarantinedRows?: any[];
+  quarantinedRows?: QuarantineItem[];
   message: string;
+  preview?: PreviewSummary;
 }
 
 export interface BackendCommitResponse {
@@ -90,7 +111,46 @@ export interface BackendCommitResponse {
   batchId: string;
   stats?: {
     totalProcessed: number;
+    okRows?: number;
+    quarantinedRows?: number;
+    patientsToCreate?: number;
+    existingPatientsReferenced?: number;
+    blockedPatients?: number;
+    encountersToCreate?: number;
+    obsToCreate?: number;
+    sheetSummaries?: SheetSummary[];
   };
   createdEncounterUuids?: string[];
-  errors?: string[];
+  errors?: (string | CommitError)[];
+}
+
+export interface SheetSummary {
+  sheetName: string;
+  okRows: number;
+  quarantinedRows: number;
+}
+
+export interface PreviewSummary {
+  totals?: {
+    totalRows: number;
+    okRows: number;
+    quarantinedRows: number;
+  };
+  patients?: {
+    new: number;
+    existing: number;
+    blocked: number;
+    blockedRefs?: string[];
+  };
+  encounters?: {
+    encountersToCreate: number;
+    obsToCreate: number;
+  };
+  sheets?: SheetSummary[];
+}
+
+export interface CommitError {
+  patientRef?: string;
+  message: string;
+  encounterUuid?: string;
 }
