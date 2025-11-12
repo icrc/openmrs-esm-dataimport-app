@@ -222,6 +222,142 @@ const ImportData: React.FC = () => {
                     </div>
                   </div>
 
+                  {dryRunResult.preview && (
+                    <div className={styles.previewSection}>
+                      <div className={styles.previewCards}>
+                        <div className={styles.previewCard}>
+                          <h4>{t('previewTotals', 'Import totals')}</h4>
+                          <dl className={styles.previewList}>
+                            <div>
+                              <dt>{t('totalRows', 'Total Rows')}</dt>
+                              <dd>{dryRunResult.preview.totals?.totalRows ?? dryRunResult.stats.totalRows}</dd>
+                            </div>
+                            <div>
+                              <dt>{t('validRows', 'Valid Rows')}</dt>
+                              <dd>{dryRunResult.preview.totals?.okRows ?? dryRunResult.stats.okRows}</dd>
+                            </div>
+                            <div>
+                              <dt>{t('quarantinedRows', 'Quarantined Rows')}</dt>
+                              <dd>
+                                {dryRunResult.preview.totals?.quarantinedRows ?? dryRunResult.stats.quarantinedRows}
+                              </dd>
+                            </div>
+                          </dl>
+                        </div>
+
+                        {(dryRunResult.preview.patients ||
+                          dryRunResult.stats.patientsToCreate ||
+                          dryRunResult.stats.existingPatientsReferenced ||
+                          dryRunResult.stats.blockedPatients) && (
+                          <div className={styles.previewCard}>
+                            <h4>{t('patientsSummary', 'Patients summary')}</h4>
+                            <dl className={styles.previewList}>
+                              <div>
+                                <dt>{t('newPatients', 'New patients')}</dt>
+                                <dd>
+                                  {dryRunResult.preview.patients?.new ?? dryRunResult.stats.patientsToCreate ?? 0}
+                                </dd>
+                              </div>
+                              <div>
+                                <dt>{t('existingPatients', 'Existing patients')}</dt>
+                                <dd>
+                                  {dryRunResult.preview.patients?.existing ??
+                                    dryRunResult.stats.existingPatientsReferenced ??
+                                    0}
+                                </dd>
+                              </div>
+                              <div>
+                                <dt>{t('blockedPatients', 'Blocked patients')}</dt>
+                                <dd>
+                                  {dryRunResult.preview.patients?.blocked ?? dryRunResult.stats.blockedPatients ?? 0}
+                                </dd>
+                              </div>
+                            </dl>
+
+                            {dryRunResult.preview.patients?.blockedRefs?.length ? (
+                              <div className={styles.blockedRefs}>
+                                <span>{t('blockedRefs', 'Blocked references')}:</span>
+                                <ul>
+                                  {dryRunResult.preview.patients.blockedRefs.map((ref) => (
+                                    <li key={ref}>{ref}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ) : null}
+                          </div>
+                        )}
+
+                        {(dryRunResult.preview.encounters ||
+                          dryRunResult.stats.encountersToCreate ||
+                          dryRunResult.stats.obsToCreate) && (
+                          <div className={styles.previewCard}>
+                            <h4>{t('encountersSummary', 'Encounters summary')}</h4>
+                            <dl className={styles.previewList}>
+                              <div>
+                                <dt>{t('encountersToCreate', 'Encounters to create')}</dt>
+                                <dd>
+                                  {dryRunResult.preview.encounters?.encountersToCreate ??
+                                    dryRunResult.stats.encountersToCreate ??
+                                    0}
+                                </dd>
+                              </div>
+                              <div>
+                                <dt>{t('observationsToCreate', 'Observations to create')}</dt>
+                                <dd>
+                                  {dryRunResult.preview.encounters?.obsToCreate ?? dryRunResult.stats.obsToCreate ?? 0}
+                                </dd>
+                              </div>
+                            </dl>
+                          </div>
+                        )}
+                      </div>
+
+                      {dryRunResult.preview.sheets?.length ? (
+                        <div className={styles.sheetBreakdown}>
+                          <h4>{t('sheetBreakdown', 'Sheet breakdown')}</h4>
+                          <DataTable
+                            rows={dryRunResult.preview.sheets.map((sheet, index) => ({
+                              id: index.toString(),
+                              sheetName: sheet.sheetName,
+                              okRows: sheet.okRows,
+                              quarantinedRows: sheet.quarantinedRows,
+                            }))}
+                            headers={[
+                              { key: 'sheetName', header: t('sheet', 'Sheet') },
+                              { key: 'okRows', header: t('validRows', 'Valid Rows') },
+                              { key: 'quarantinedRows', header: t('quarantinedRows', 'Quarantined Rows') },
+                            ]}
+                          >
+                            {({ rows, headers, getTableProps, getHeaderProps, getRowProps }) => (
+                              <TableContainer>
+                                <Table {...getTableProps()}>
+                                  <TableHead>
+                                    <TableRow>
+                                      {headers.map((header) => (
+                                        <TableHeader key={header.key} {...getHeaderProps({ header })}>
+                                          {header.header}
+                                        </TableHeader>
+                                      ))}
+                                    </TableRow>
+                                  </TableHead>
+                                  <TableBody>
+                                    {rows.map((row) => (
+                                      <TableRow key={row.id} {...getRowProps({ row })}>
+                                        {row.cells.map((cell) => (
+                                          <TableCell key={cell.id}>{cell.value}</TableCell>
+                                        ))}
+                                      </TableRow>
+                                    ))}
+                                  </TableBody>
+                                </Table>
+                              </TableContainer>
+                            )}
+                          </DataTable>
+                        </div>
+                      ) : null}
+                    </div>
+                  )}
+
                   {dryRunResult.issues.length > 0 && (
                     <div className={styles.validationIssues}>
                       <h4>{t('validationIssues', 'Validation Issues')}</h4>
@@ -301,7 +437,7 @@ const ImportData: React.FC = () => {
                   {dryRunResult && !importStarted && (
                     <div className={styles.commitSummary}>
                       <h4>{t('importConfirmation', 'Import Confirmation')}</h4>
-                      <p>
+                      <p style={{ color: 'var(--brand-teal)', fontWeight: '500' }}>
                         {t('readyToImport', 'Ready to import')} <strong>{dryRunResult.stats.okRows}</strong>{' '}
                         {t('validRows', 'valid rows')}.
                       </p>
@@ -398,6 +534,11 @@ const ImportData: React.FC = () => {
                           </DataTable>
                         </div>
                       )}
+                      <div className={styles.actionButtons}>
+                        <Button kind="secondary" onClick={handleReset} className={styles.actionButton}>
+                          {t('clear', 'Clear')}
+                        </Button>
+                      </div>
                     </div>
                   )}
                 </>
