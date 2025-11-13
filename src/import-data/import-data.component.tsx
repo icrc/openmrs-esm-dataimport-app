@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
@@ -15,6 +15,7 @@ import {
   TableHeader,
   TableBody,
   TableCell,
+  Pagination,
 } from '@carbon/react';
 import { Download } from '@carbon/react/icons';
 import { showSnackbar } from '@openmrs/esm-framework';
@@ -34,6 +35,41 @@ const ImportData: React.FC = () => {
   const [commitResult, setCommitResult] = useState<CommitResponse | null>(null);
   const [currentBatchId, setCurrentBatchId] = useState<string | null>(null);
   const [importStarted, setImportStarted] = useState(false);
+  const [issuesPage, setIssuesPage] = useState(1);
+  const [issuesPageSize, setIssuesPageSize] = useState(10);
+  const [sheetsPage, setSheetsPage] = useState(1);
+  const [sheetsPageSize, setSheetsPageSize] = useState(10);
+  const issuesStartIndex = Math.max(0, (issuesPage - 1) * issuesPageSize);
+  const paginatedIssues = dryRunResult?.issues?.slice(issuesStartIndex, issuesStartIndex + issuesPageSize) ?? [];
+  const totalIssues = dryRunResult?.issues?.length ?? 0;
+  const sheetsStartIndex = Math.max(0, (sheetsPage - 1) * sheetsPageSize);
+  const paginatedSheets =
+    dryRunResult?.preview?.sheets?.slice(sheetsStartIndex, sheetsStartIndex + sheetsPageSize) ?? [];
+  const totalSheets = dryRunResult?.preview?.sheets?.length ?? 0;
+
+  useEffect(() => {
+    if (!dryRunResult?.issues?.length) {
+      setIssuesPage(1);
+      return;
+    }
+
+    setIssuesPage((prevPage) => {
+      const totalPages = Math.max(1, Math.ceil(dryRunResult.issues.length / issuesPageSize));
+      return Math.min(prevPage, totalPages);
+    });
+  }, [dryRunResult, issuesPageSize]);
+
+  useEffect(() => {
+    if (!dryRunResult?.preview?.sheets?.length) {
+      setSheetsPage(1);
+      return;
+    }
+
+    setSheetsPage((prevPage) => {
+      const totalPages = Math.max(1, Math.ceil(dryRunResult.preview.sheets.length / sheetsPageSize));
+      return Math.min(prevPage, totalPages);
+    });
+  }, [dryRunResult, sheetsPageSize]);
 
   const handleDryRun = async () => {
     if (!uploadedFile) return;
@@ -316,8 +352,8 @@ const ImportData: React.FC = () => {
                         <div className={styles.sheetBreakdown}>
                           <h4>{t('sheetBreakdown', 'Sheet breakdown')}</h4>
                           <DataTable
-                            rows={dryRunResult.preview.sheets.map((sheet, index) => ({
-                              id: index.toString(),
+                            rows={paginatedSheets.map((sheet, index) => ({
+                              id: (sheetsStartIndex + index).toString(),
                               sheetName: sheet.sheetName,
                               okRows: sheet.okRows,
                               quarantinedRows: sheet.quarantinedRows,
@@ -353,6 +389,19 @@ const ImportData: React.FC = () => {
                               </TableContainer>
                             )}
                           </DataTable>
+                          <div className={styles.tablePagination}>
+                            <Pagination
+                              pageSizes={[5, 10, 20, 50]}
+                              totalItems={totalSheets}
+                              page={sheetsPage}
+                              pageSize={sheetsPageSize}
+                              onChange={({ page, pageSize }) => {
+                                setSheetsPageSize(pageSize);
+                                setSheetsPage(page);
+                              }}
+                              size="sm"
+                            />
+                          </div>
                         </div>
                       ) : null}
                     </div>
@@ -362,8 +411,8 @@ const ImportData: React.FC = () => {
                     <div className={styles.validationIssues}>
                       <h4>{t('validationIssues', 'Validation Issues')}</h4>
                       <DataTable
-                        rows={dryRunResult.issues.map((issue, index) => ({
-                          id: index.toString(),
+                        rows={paginatedIssues.map((issue, index) => ({
+                          id: (issuesStartIndex + index).toString(),
                           sheet: issue.sheet,
                           row: issue.row,
                           column: issue.column,
@@ -412,6 +461,20 @@ const ImportData: React.FC = () => {
                           </TableContainer>
                         )}
                       </DataTable>
+
+                      <div className={styles.tablePagination}>
+                        <Pagination
+                          pageSizes={[5, 10, 20, 50]}
+                          totalItems={totalIssues}
+                          page={issuesPage}
+                          pageSize={issuesPageSize}
+                          onChange={({ page, pageSize }) => {
+                            setIssuesPageSize(pageSize);
+                            setIssuesPage(page);
+                          }}
+                          size="sm"
+                        />
+                      </div>
 
                       <div className={styles.quarantineInfo}>
                         <p className={styles.infoText}>
