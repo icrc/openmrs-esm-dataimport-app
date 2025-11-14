@@ -54,7 +54,7 @@ const ImportData: React.FC = () => {
     }
 
     setIssuesPage((prevPage) => {
-      const totalPages = Math.max(1, Math.ceil(dryRunResult.issues.length / issuesPageSize));
+      const totalPages = Math.max(1, Math.ceil((dryRunResult?.issues?.length ?? 0) / issuesPageSize));
       return Math.min(prevPage, totalPages);
     });
   }, [dryRunResult, issuesPageSize]);
@@ -66,7 +66,7 @@ const ImportData: React.FC = () => {
     }
 
     setSheetsPage((prevPage) => {
-      const totalPages = Math.max(1, Math.ceil(dryRunResult.preview.sheets.length / sheetsPageSize));
+      const totalPages = Math.max(1, Math.ceil((dryRunResult?.preview?.sheets?.length ?? 0) / sheetsPageSize));
       return Math.min(prevPage, totalPages);
     });
   }, [dryRunResult, sheetsPageSize]);
@@ -101,16 +101,16 @@ const ImportData: React.FC = () => {
       const result = await commitImport(currentBatchId);
       setCommitResult(result);
 
-      if (result.summary.failed === 0) {
+      if (result?.summary?.failed === 0) {
         showSnackbar({
           title: 'Import Complete',
-          subtitle: `Successfully imported ${result.summary.successful} rows`,
+          subtitle: `Successfully imported ${result.summary?.successful ?? 0} rows`,
           kind: 'success',
         });
       } else {
         showSnackbar({
           title: 'Import Complete with Issues',
-          subtitle: `${result.summary.successful} rows imported, ${result.summary.failed} failed`,
+          subtitle: `${result.summary?.successful ?? 0} rows imported, ${result.summary?.failed ?? 0} failed`,
           kind: 'warning',
         });
       }
@@ -245,20 +245,20 @@ const ImportData: React.FC = () => {
                     <div className={styles.statsGrid}>
                       <div className={styles.statItem}>
                         <span className={styles.statLabel}>{t('totalRows', 'Total Rows')}:</span>
-                        <span className={styles.statValue}>{dryRunResult.stats.totalRows}</span>
+                        <span className={styles.statValue}>{dryRunResult?.stats?.totalRows ?? 0}</span>
                       </div>
                       <div className={`${styles.statItem} ${styles.success}`}>
                         <span className={styles.statLabel}>{t('validRows', 'Valid Rows')}:</span>
-                        <span className={styles.statValue}>{dryRunResult.stats.okRows}</span>
+                        <span className={styles.statValue}>{dryRunResult?.stats?.okRows ?? 0}</span>
                       </div>
                       <div className={`${styles.statItem} ${styles.warning}`}>
                         <span className={styles.statLabel}>{t('quarantinedRows', 'Quarantined Rows')}:</span>
-                        <span className={styles.statValue}>{dryRunResult.stats.quarantinedRows}</span>
+                        <span className={styles.statValue}>{dryRunResult?.stats?.quarantinedRows ?? 0}</span>
                       </div>
                     </div>
                   </div>
 
-                  {dryRunResult.preview && (
+                  {dryRunResult?.preview && (
                     <div className={styles.previewSection}>
                       <div className={styles.previewCards}>
                         <div className={styles.previewCard}>
@@ -266,81 +266,85 @@ const ImportData: React.FC = () => {
                           <dl className={styles.previewList}>
                             <div>
                               <dt>{t('totalRows', 'Total Rows')}</dt>
-                              <dd>{dryRunResult.preview.totals?.totalRows ?? dryRunResult.stats.totalRows}</dd>
+                              <dd>{dryRunResult?.preview?.totals?.totalRows ?? dryRunResult?.stats?.totalRows ?? 0}</dd>
                             </div>
                             <div>
                               <dt>{t('validRows', 'Valid Rows')}</dt>
-                              <dd>{dryRunResult.preview.totals?.okRows ?? dryRunResult.stats.okRows}</dd>
+                              <dd>{dryRunResult?.preview?.totals?.okRows ?? dryRunResult?.stats?.okRows ?? 0}</dd>
                             </div>
                             <div>
                               <dt>{t('quarantinedRows', 'Quarantined Rows')}</dt>
                               <dd>
-                                {dryRunResult.preview.totals?.quarantinedRows ?? dryRunResult.stats.quarantinedRows}
+                                {dryRunResult?.preview?.totals?.quarantinedRows ??
+                                  dryRunResult?.stats?.quarantinedRows ??
+                                  0}
                               </dd>
                             </div>
                           </dl>
                         </div>
 
-                        {(dryRunResult.preview.patients ||
-                          dryRunResult.stats.patientsToCreate ||
-                          dryRunResult.stats.existingPatientsReferenced ||
-                          dryRunResult.stats.blockedPatients) && (
+                        {(dryRunResult?.preview?.patients ||
+                          dryRunResult?.stats?.patientsToCreate ||
+                          dryRunResult?.stats?.existingPatientsReferenced ||
+                          dryRunResult?.stats?.blockedPatients) && (
                           <div className={styles.previewCard}>
                             <h4>{t('patientsSummary', 'Patients summary')}</h4>
                             <dl className={styles.previewList}>
                               <div>
                                 <dt>{t('newPatients', 'New patients')}</dt>
                                 <dd>
-                                  {dryRunResult.preview.patients?.new ?? dryRunResult.stats.patientsToCreate ?? 0}
+                                  {dryRunResult?.preview?.patients?.new ?? dryRunResult?.stats?.patientsToCreate ?? 0}
                                 </dd>
                               </div>
                               <div>
                                 <dt>{t('existingPatients', 'Existing patients')}</dt>
                                 <dd>
-                                  {dryRunResult.preview.patients?.existing ??
-                                    dryRunResult.stats.existingPatientsReferenced ??
+                                  {dryRunResult?.preview?.patients?.existing ??
+                                    dryRunResult?.stats?.existingPatientsReferenced ??
                                     0}
                                 </dd>
                               </div>
                               <div>
                                 <dt>{t('blockedPatients', 'Blocked patients')}</dt>
                                 <dd>
-                                  {dryRunResult.preview.patients?.blocked ?? dryRunResult.stats.blockedPatients ?? 0}
+                                  {dryRunResult?.preview?.patients?.blocked ??
+                                    dryRunResult?.stats?.blockedPatients ??
+                                    0}
                                 </dd>
                               </div>
                             </dl>
 
-                            {dryRunResult.preview.patients?.blockedRefs?.length ? (
+                            {dryRunResult?.preview?.patients?.blockedRefs?.length ? (
                               <div className={styles.blockedRefs}>
                                 <span>{t('blockedRefs', 'Blocked references')}:</span>
                                 <ul>
-                                  {dryRunResult.preview.patients.blockedRefs.map((ref) => (
-                                    <li key={ref}>{ref}</li>
-                                  ))}
+                                  {dryRunResult?.preview?.patients?.blockedRefs?.map((ref) => <li key={ref}>{ref}</li>)}
                                 </ul>
                               </div>
                             ) : null}
                           </div>
                         )}
 
-                        {(dryRunResult.preview.encounters ||
-                          dryRunResult.stats.encountersToCreate ||
-                          dryRunResult.stats.obsToCreate) && (
+                        {(dryRunResult?.preview?.encounters ||
+                          dryRunResult?.stats?.encountersToCreate ||
+                          dryRunResult?.stats?.obsToCreate) && (
                           <div className={styles.previewCard}>
                             <h4>{t('encountersSummary', 'Encounters summary')}</h4>
                             <dl className={styles.previewList}>
                               <div>
                                 <dt>{t('encountersToCreate', 'Encounters to create')}</dt>
                                 <dd>
-                                  {dryRunResult.preview.encounters?.encountersToCreate ??
-                                    dryRunResult.stats.encountersToCreate ??
+                                  {dryRunResult?.preview?.encounters?.encountersToCreate ??
+                                    dryRunResult?.stats?.encountersToCreate ??
                                     0}
                                 </dd>
                               </div>
                               <div>
                                 <dt>{t('observationsToCreate', 'Observations to create')}</dt>
                                 <dd>
-                                  {dryRunResult.preview.encounters?.obsToCreate ?? dryRunResult.stats.obsToCreate ?? 0}
+                                  {dryRunResult?.preview?.encounters?.obsToCreate ??
+                                    dryRunResult?.stats?.obsToCreate ??
+                                    0}
                                 </dd>
                               </div>
                             </dl>
@@ -348,7 +352,7 @@ const ImportData: React.FC = () => {
                         )}
                       </div>
 
-                      {dryRunResult.preview.sheets?.length ? (
+                      {dryRunResult?.preview?.sheets?.length ? (
                         <div className={styles.sheetBreakdown}>
                           <h4>{t('sheetBreakdown', 'Sheet breakdown')}</h4>
                           <DataTable
@@ -407,7 +411,7 @@ const ImportData: React.FC = () => {
                     </div>
                   )}
 
-                  {dryRunResult.issues.length > 0 && (
+                  {dryRunResult?.issues && dryRunResult?.issues?.length > 0 && (
                     <div className={styles.validationIssues}>
                       <h4>{t('validationIssues', 'Validation Issues')}</h4>
                       <DataTable
@@ -501,13 +505,13 @@ const ImportData: React.FC = () => {
                     <div className={styles.commitSummary}>
                       <h4>{t('importConfirmation', 'Import Confirmation')}</h4>
                       <p style={{ color: 'var(--brand-teal)', fontWeight: '500' }}>
-                        {t('readyToImport', 'Ready to import')} <strong>{dryRunResult.stats.okRows}</strong>{' '}
+                        {t('readyToImport', 'Ready to import')} <strong>{dryRunResult?.stats?.okRows ?? 0}</strong>{' '}
                         {t('validRows', 'valid rows')}.
                       </p>
-                      {dryRunResult.stats.quarantinedRows > 0 && (
+                      {(dryRunResult?.stats?.quarantinedRows ?? 0) > 0 && (
                         <p className={styles.warningText}>
-                          <strong>{dryRunResult.stats.quarantinedRows}</strong> rows will be skipped due to validation
-                          issues.
+                          <strong>{dryRunResult?.stats?.quarantinedRows ?? 0}</strong> rows will be skipped due to
+                          validation issues.
                         </p>
                       )}
 
@@ -516,7 +520,7 @@ const ImportData: React.FC = () => {
                           {t('clear', 'Clear')}
                         </Button>
                         <Button
-                          disabled={isImporting || dryRunResult.stats.okRows === 0}
+                          disabled={isImporting || (dryRunResult?.stats?.okRows ?? 0) === 0}
                           onClick={handleImport}
                           className={styles.actionButton}
                         >
@@ -533,24 +537,24 @@ const ImportData: React.FC = () => {
                         <div className={styles.statsGrid}>
                           <div className={styles.statItem}>
                             <span className={styles.statLabel}>{t('totalProcessed', 'Total Processed')}:</span>
-                            <span className={styles.statValue}>{commitResult.summary.totalProcessed}</span>
+                            <span className={styles.statValue}>{commitResult?.summary?.totalProcessed ?? 0}</span>
                           </div>
                           <div className={`${styles.statItem} ${styles.success}`}>
                             <span className={styles.statLabel}>{t('successful', 'Successful')}:</span>
-                            <span className={styles.statValue}>{commitResult.summary.successful}</span>
+                            <span className={styles.statValue}>{commitResult?.summary?.successful ?? 0}</span>
                           </div>
                           <div className={`${styles.statItem} ${styles.error}`}>
                             <span className={styles.statLabel}>{t('failed', 'Failed')}:</span>
-                            <span className={styles.statValue}>{commitResult.summary.failed}</span>
+                            <span className={styles.statValue}>{commitResult?.summary?.failed ?? 0}</span>
                           </div>
                         </div>
                       </div>
 
-                      {commitResult.results.length > 0 && (
+                      {commitResult?.results && commitResult?.results?.length > 0 && (
                         <div className={styles.resultsDetails}>
                           <h4>{t('importDetails', 'Import Details')}</h4>
                           <DataTable
-                            rows={commitResult.results.map((result, index) => ({
+                            rows={commitResult?.results?.map((result, index) => ({
                               id: index.toString(),
                               patientRef: result.patientRef,
                               status: result.status,

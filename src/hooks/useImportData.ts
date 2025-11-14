@@ -23,7 +23,10 @@ export function useImportData() {
         body: formData,
       });
 
-      const data = response.data;
+      const data = response?.data;
+      if (!data) {
+        throw new Error('No data received from server');
+      }
 
       const totals = data.preview?.totals ?? {
         totalRows: data.stats?.totalRows ?? data.okRows?.length ?? 0,
@@ -78,7 +81,10 @@ export function useImportData() {
         body: {},
       });
 
-      const data = response.data;
+      const data = response?.data;
+      if (!data) {
+        throw new Error('No data received from server');
+      }
 
       const encounters =
         data.createdEncounterUuids?.map((uuid: string, index: number) => ({
