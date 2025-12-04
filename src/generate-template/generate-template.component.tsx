@@ -224,7 +224,7 @@ const GenerateTemplate: React.FC = () => {
                   placeholder={t('enterFilename', 'Enter file name (optional)')}
                   value={templateOptions.filename || ''}
                   onChange={(event) => setTemplateOptions({ ...templateOptions, filename: event.target.value })}
-                  helperText={t('filenameHelper', 'Default is o3_form_template.xlsx')}
+                  helperText={t('filenameHelper', 'Default is form_template.xlsx')}
                 />
               </div>
             </Tile>

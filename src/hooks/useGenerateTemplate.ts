@@ -20,7 +20,7 @@ export function useGenerateTemplate() {
     const ensureXlsxExtension = (name?: string) => {
       const trimmed = name?.trim() || '';
       if (!trimmed) {
-        return 'o3_form_template.xlsx';
+        return 'form_template.xlsx';
       }
       return trimmed.toLowerCase().endsWith('.xlsx') ? trimmed : `${trimmed}.xlsx`;
     };
