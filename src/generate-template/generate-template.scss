@@ -140,6 +140,12 @@
     }
   }
 
+  .uploadedCount {
+    font-size: 0.75rem;
+    color: var(--success);
+    font-style: italic;
+  }
+
   .generateButton {
     width: 100%;
     margin-top: auto;

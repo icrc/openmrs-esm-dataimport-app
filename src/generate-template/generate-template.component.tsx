@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
@@ -20,6 +20,8 @@ import { useGetAllLocations } from '../hooks/useGetAllLocations';
 import { showSnackbar, showNotification } from '@openmrs/esm-framework';
 import Header from '../header/header.component';
 import EmptyDataIllustration from '../empty-data-illustration/empty-data-illustration.component';
+import { FormFileUpload } from '../form-file-upload/form-file-upload.component';
+import type { UploadedFormFile } from '../hooks/useFormFileUpload';
 import styles from './generate-template.scss';
 
 const GenerateTemplate: React.FC = () => {
@@ -27,6 +29,7 @@ const GenerateTemplate: React.FC = () => {
   const { generate, isGenerating: isGeneratingFile } = useGenerateTemplate();
   const { t } = useTranslation();
   const [selectedForms, setSelectedForms] = useState<string[]>([]);
+  const [uploadedFormFiles, setUploadedFormFiles] = useState<UploadedFormFile[]>([]);
   const [templateOptions, setTemplateOptions] = useState<TemplateOptions>({ includePatientRegistration: true });
   const [isGenerating, setIsGenerating] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -53,10 +56,21 @@ const GenerateTemplate: React.FC = () => {
     setSelectedForms(selectedForms.filter((uuid) => uuid !== formUuid));
   };
 
+  const handleFilesUploaded = useCallback((files: UploadedFormFile[]) => {
+    setUploadedFormFiles(files);
+  }, []);
+
   const handleGenerateTemplate = async () => {
     try {
       setIsGenerating(true);
-      await generate(selectedForms, {
+
+      // Combine database form UUIDs and uploaded file IDs
+      const allFormIdentifiers = [
+        ...selectedForms,
+        ...uploadedFormFiles.map(f => f.fileId)
+      ];
+
+      await generate(allFormIdentifiers, {
         includePatientRegistration: templateOptions.includePatientRegistration,
         locationUuid: templateOptions.locationUuid,
         filename: templateOptions.filename,
@@ -67,6 +81,7 @@ const GenerateTemplate: React.FC = () => {
         kind: 'success',
       });
       setSelectedForms([]);
+      setUploadedFormFiles([]);
       setTemplateOptions({ includePatientRegistration: true });
     } catch (e) {
       showSnackbar({
@@ -80,7 +95,7 @@ const GenerateTemplate: React.FC = () => {
   };
 
   const calculateTotalSheets = () => {
-    let total = selectedForms.length;
+    let total = selectedForms.length + uploadedFormFiles.length;
     if (templateOptions.includePatientRegistration) total += 1;
     return total;
   };
@@ -120,6 +135,14 @@ const GenerateTemplate: React.FC = () => {
       </div>
       <div className="mainContent">
         <Grid className="componentGrid">
+          {/* Form File Upload Section - Full Width */}
+          <Column lg={16} md={8} sm={4}>
+            <FormFileUpload
+              onFilesUploaded={handleFilesUploaded}
+              disabled={isGenerating}
+            />
+          </Column>
+
           <Column lg={5} md={4} sm={4}>
             <Tile className={styles.sectionTile}>
               <h3 className={styles.sectionTitle}>{t('selectForms', 'Select Forms')}</h3>
@@ -233,11 +256,12 @@ const GenerateTemplate: React.FC = () => {
           <Column lg={5} md={4} sm={4}>
             <Tile className={styles.sectionTile}>
               <h3 className={styles.sectionTitle}>{t('selectedForms', 'Selected Forms')}</h3>
-              {selectedForms.length === 0 ? (
+              {selectedForms.length === 0 && uploadedFormFiles.length === 0 ? (
                 <p className={styles.noSelection}>{t('noFormsSelected', 'No forms selected')}</p>
               ) : (
                 <>
                   <div className={styles.selectedFormsList}>
+                    {/* Database forms */}
                     {selectedForms.map((uuid) => {
                       const form = forms.find((f) => f.uuid === uuid);
                       return form ? (
@@ -246,18 +270,35 @@ const GenerateTemplate: React.FC = () => {
                         </Tag>
                       ) : null;
                     })}
+
+                    {/* Uploaded file forms */}
+                    {uploadedFormFiles.map((file) => (
+                      <Tag
+                        key={file.fileId}
+                        type="green"
+                        size="sm"
+                        title={`${file.detectedType}: ${file.filename}`}
+                      >
+                        📄 {file.filename}
+                      </Tag>
+                    ))}
                   </div>
                   <div className={styles.summary}>
                     <p>
                       {t('totalSheets', 'Total sheets')}: {calculateTotalSheets()}
                     </p>
+                    {uploadedFormFiles.length > 0 && (
+                      <p className={styles.uploadedCount}>
+                        ({uploadedFormFiles.length} uploaded file{uploadedFormFiles.length > 1 ? 's' : ''})
+                      </p>
+                    )}
                   </div>
                 </>
               )}
 
               <Button
                 className={styles.generateButton}
-                disabled={selectedForms.length === 0 || isGenerating}
+                disabled={(selectedForms.length === 0 && uploadedFormFiles.length === 0) || isGenerating}
                 onClick={handleGenerateTemplate}
               >
                 {isGenerating || isGeneratingFile ? (
