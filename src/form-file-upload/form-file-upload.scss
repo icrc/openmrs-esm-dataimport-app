@@ -1,0 +1,155 @@
+@use '@carbon/styles/scss/spacing';
+@use '@carbon/styles/scss/type';
+
+.formFileUploadContainer {
+  margin-bottom: spacing.$spacing-05;
+}
+
+.uploadTile {
+  padding: spacing.$spacing-05;
+  background-color: var(--cds-layer-01, #ffffff);
+}
+
+.uploadHeader {
+  margin-bottom: spacing.$spacing-05;
+
+  h4 {
+    @include type.type-style('heading-03');
+    margin-bottom: spacing.$spacing-02;
+    color: var(--cds-text-primary, #161616);
+  }
+}
+
+.uploadDescription {
+  @include type.type-style('body-01');
+  color: var(--cds-text-secondary, #525252);
+  margin-bottom: spacing.$spacing-03;
+}
+
+.dropZone {
+  border: 2px dashed var(--cds-border-subtle, #e0e0e0);
+  border-radius: 4px;
+  padding: spacing.$spacing-07;
+  text-align: center;
+  background-color: var(--cds-field-01, #f4f4f4);
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+
+  &:hover:not(.disabled) {
+    border-color: var(--brand-teal, #009384);
+    background-color: var(--cds-hover-ui, #e8e8e8);
+  }
+
+  &.dragging {
+    border-color: var(--brand-teal, #009384);
+    background-color: rgba(0, 147, 132, 0.1);
+    border-style: solid;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.uploadIcon {
+  color: var(--cds-icon-secondary, #525252);
+  margin-bottom: spacing.$spacing-03;
+}
+
+.dropZoneText {
+  @include type.type-style('body-01');
+  color: var(--cds-text-primary, #161616);
+  margin-bottom: spacing.$spacing-02;
+}
+
+.browseButton {
+  background: none;
+  border: none;
+  color: var(--brand-teal, #009384);
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 500;
+  padding: 0;
+
+  &:hover:not(:disabled) {
+    color: var(--cds-link-primary-hover, #005d5d);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.dropZoneHint {
+  @include type.type-style('label-01');
+  color: var(--cds-text-secondary, #525252);
+  margin-top: spacing.$spacing-02;
+}
+
+.selectedFilesSection,
+.uploadedFilesSection {
+  margin-top: spacing.$spacing-05;
+  padding-top: spacing.$spacing-05;
+  border-top: 1px solid var(--cds-border-subtle, #e0e0e0);
+
+  h5 {
+    @include type.type-style('heading-compact-01');
+    margin-bottom: spacing.$spacing-03;
+    color: var(--cds-text-primary, #161616);
+  }
+}
+
+.uploadedHint {
+  @include type.type-style('body-compact-01');
+  color: var(--cds-text-secondary, #525252);
+  margin-bottom: spacing.$spacing-03;
+  font-style: italic;
+}
+
+.fileList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: spacing.$spacing-03;
+  margin-bottom: spacing.$spacing-04;
+}
+
+.fileTag {
+  max-width: 100%;
+
+  :global(.cds--tag__label) {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.uploadedFileInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: spacing.$spacing-01;
+
+  strong {
+    font-weight: 600;
+  }
+}
+
+.fileType {
+  @include type.type-style('label-01');
+  color: var(--cds-text-secondary, #525252);
+  font-size: 0.75rem;
+}
+
+.uploadButton {
+  margin-top: spacing.$spacing-03;
+}
+
+.uploadingStatus {
+  margin-top: spacing.$spacing-05;
+  padding: spacing.$spacing-04;
+  background-color: var(--cds-layer-02, #f4f4f4);
+  border-radius: 4px;
+}
