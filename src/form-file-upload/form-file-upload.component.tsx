@@ -59,13 +59,16 @@ export const FormFileUpload: React.FC<FormFileUploadProps> = ({ onFilesUploaded,
     fileInputRef.current?.click();
   }, []);
 
-  const handleDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    if (!disabled) {
-      setIsDragging(true);
-    }
-  }, [disabled]);
+  const handleDragOver = useCallback(
+    (event: React.DragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (!disabled) {
+        setIsDragging(true);
+      }
+    },
+    [disabled],
+  );
 
   const handleDragLeave = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -94,9 +97,12 @@ export const FormFileUpload: React.FC<FormFileUploadProps> = ({ onFilesUploaded,
     setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
   }, []);
 
-  const handleRemoveUploadedFile = useCallback((fileId: string) => {
-    removeUploadedFile(fileId);
-  }, [removeUploadedFile]);
+  const handleRemoveUploadedFile = useCallback(
+    (fileId: string) => {
+      removeUploadedFile(fileId);
+    },
+    [removeUploadedFile],
+  );
 
   const handleUpload = useCallback(async () => {
     if (selectedFiles.length === 0) return;
@@ -157,12 +163,7 @@ export const FormFileUpload: React.FC<FormFileUploadProps> = ({ onFilesUploaded,
           <Upload size={32} className={styles.uploadIcon} />
           <p className={styles.dropZoneText}>
             Drag and drop form files here, or{' '}
-            <button
-              type="button"
-              className={styles.browseButton}
-              onClick={handleBrowseClick}
-              disabled={disabled}
-            >
+            <button type="button" className={styles.browseButton} onClick={handleBrowseClick} disabled={disabled}>
               browse
             </button>
           </p>
@@ -177,13 +178,7 @@ export const FormFileUpload: React.FC<FormFileUploadProps> = ({ onFilesUploaded,
             <h5>Selected Files ({selectedFiles.length})</h5>
             <div className={styles.fileList}>
               {selectedFiles.map((file, index) => (
-                <Tag
-                  key={index}
-                  filter
-                  type="blue"
-                  onClose={() => handleRemoveFile(index)}
-                  className={styles.fileTag}
-                >
+                <Tag key={index} filter type="blue" onClose={() => handleRemoveFile(index)} className={styles.fileTag}>
                   {file.name} ({(file.size / 1024).toFixed(1)} KB)
                 </Tag>
               ))}
