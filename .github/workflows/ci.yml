@@ -27,6 +27,9 @@ jobs:
       - name: Run lint, type checks and tests
         run: yarn verify
 
+      - name: Run Prettier check
+        run: yarn prettier:check
+
       - name: Yarn build
         run: yarn build
 

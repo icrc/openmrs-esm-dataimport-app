@@ -65,10 +65,7 @@ const GenerateTemplate: React.FC = () => {
       setIsGenerating(true);
 
       // Combine database form UUIDs and uploaded file IDs
-      const allFormIdentifiers = [
-        ...selectedForms,
-        ...uploadedFormFiles.map(f => f.fileId)
-      ];
+      const allFormIdentifiers = [...selectedForms, ...uploadedFormFiles.map((f) => f.fileId)];
 
       await generate(allFormIdentifiers, {
         includePatientRegistration: templateOptions.includePatientRegistration,
@@ -137,10 +134,7 @@ const GenerateTemplate: React.FC = () => {
         <Grid className="componentGrid">
           {/* Form File Upload Section - Full Width */}
           <Column lg={16} md={8} sm={4}>
-            <FormFileUpload
-              onFilesUploaded={handleFilesUploaded}
-              disabled={isGenerating}
-            />
+            <FormFileUpload onFilesUploaded={handleFilesUploaded} disabled={isGenerating} />
           </Column>
 
           <Column lg={5} md={4} sm={4}>
@@ -273,12 +267,7 @@ const GenerateTemplate: React.FC = () => {
 
                     {/* Uploaded file forms */}
                     {uploadedFormFiles.map((file) => (
-                      <Tag
-                        key={file.fileId}
-                        type="green"
-                        size="sm"
-                        title={`${file.detectedType}: ${file.filename}`}
-                      >
+                      <Tag key={file.fileId} type="green" size="sm" title={`${file.detectedType}: ${file.filename}`}>
                         📄 {file.filename}
                       </Tag>
                     ))}

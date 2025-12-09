@@ -102,12 +102,9 @@ export function useFormFileUpload() {
     setUploadError(null);
   }, []);
 
-  const removeUploadedFile = useCallback(
-    (fileId: string) => {
-      setUploadedFiles((prev) => prev.filter((f) => f.fileId !== fileId));
-    },
-    [],
-  );
+  const removeUploadedFile = useCallback((fileId: string) => {
+    setUploadedFiles((prev) => prev.filter((f) => f.fileId !== fileId));
+  }, []);
 
   return {
     uploadFormFiles,
