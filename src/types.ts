@@ -9,6 +9,9 @@ export interface TemplateOptions {
   includePatientRegistration: boolean;
   // filenamePattern: string;
   locationUuid?: string;
+  locationUuids?: string[];
+  locationTagFilter?: string;
+  restrictToAllowedLocations?: boolean;
   filename?: string;
 }
 
