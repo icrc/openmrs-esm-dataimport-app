@@ -24,6 +24,11 @@
       "name": "excel-import-nav-item",
       "slot": "data-import-left-panel-slot",
       "component": "excelImportNavItem"
+    },
+    {
+      "name": "audit-log-nav-item",
+      "slot": "data-import-left-panel-slot",
+      "component": "auditLogNavItem"
     }
   ],
   "pages": [
