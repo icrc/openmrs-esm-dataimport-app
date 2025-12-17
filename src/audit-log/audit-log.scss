@@ -1,0 +1,128 @@
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/type' as *;
+
+.auditLog {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.sectionTile {
+  margin-top: 1rem;
+  margin-bottom: $spacing-05;
+}
+
+.sectionTitle {
+  @include type-style('heading-03');
+  margin-bottom: $spacing-05;
+  color: var(--brand-teal);
+}
+
+.filterSection {
+  .filterGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: $spacing-05;
+    margin-bottom: $spacing-05;
+  }
+
+  .filterActions {
+    display: flex;
+    gap: $spacing-03;
+    flex-wrap: wrap;
+  }
+}
+
+.tablePagination {
+  margin-top: $spacing-05;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.emptyState {
+  @include type-style('body-01');
+  color: var(--cds-text-02);
+  text-align: center;
+  padding: $spacing-07 0;
+}
+
+.expandedRow {
+  background: var(--cds-ui-01);
+}
+
+.expandedContent {
+  padding: $spacing-05;
+  background: #f9f9f9;
+}
+
+.expandedSection {
+  margin-bottom: $spacing-05;
+  background: #ffffff;
+  padding: $spacing-05;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  h4 {
+    @include type-style('heading-02');
+    margin-bottom: $spacing-04;
+    color: var(--brand-teal);
+    padding-bottom: $spacing-03;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .detailList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: $spacing-03;
+
+    > div {
+      display: flex;
+      padding: $spacing-02 0;
+      border-bottom: 1px solid #f0f0f0;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      dt {
+        @include type-style('label-01');
+        font-weight: 600;
+        color: var(--cds-text-02);
+        min-width: 180px;
+        flex-shrink: 0;
+      }
+
+      dd {
+        @include type-style('body-01');
+        color: var(--cds-text-01);
+        margin: 0;
+        flex: 1;
+        word-break: break-word;
+      }
+    }
+  }
+
+  p {
+    @include type-style('body-01');
+    color: var(--cds-text-01);
+    white-space: pre-wrap;
+    background: #f5f5f5;
+    padding: $spacing-04;
+    border-radius: 4px;
+    margin: 0;
+    line-height: 1.6;
+  }
+}
+
+.moreErrors {
+  @include type-style('label-01');
+  color: var(--cds-text-02);
+  margin-top: $spacing-03;
+  text-align: center;
+  font-style: italic;
+}

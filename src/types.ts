@@ -154,3 +154,58 @@ export interface CommitError {
   message: string;
   encounterUuid?: string;
 }
+
+// Audit Log interfaces
+export interface AuditLog {
+  uuid: string;
+  batchId: string;
+  filename: string;
+  status: 'SUCCESS' | 'FAILED' | 'PARTIAL_SUCCESS' | 'VALIDATION_ERRORS';
+  action: 'DRY_RUN' | 'COMMIT';
+  totalRows?: number;
+  successfulRows?: number;
+  quarantinedRows?: number;
+  patientsCreated?: number;
+  encountersCreated?: number;
+  obsCreated?: number;
+  errorSummary?: string;
+  creator?: string;
+  creatorName?: string;
+  creatorUuid?: string;
+  dateCreated: string;
+  durationMs?: number;
+}
+
+export interface AuditLogDetail extends AuditLog {
+  locationUuid?: string;
+  formUuids?: string;
+  errors?: AuditLogError[];
+  errorCount?: number;
+}
+
+export interface AuditLogError {
+  sheetName: string;
+  rowIndex: number;
+  columnIndex: number;
+  errorCode: string;
+  errorMessage: string;
+}
+
+export interface AuditLogsResponse {
+  results: AuditLog[];
+  totalCount: number;
+  startIndex: number;
+  maxResults: number;
+  totalPages: number;
+}
+
+export interface AuditLogConfig {
+  retentionDays: number;
+}
+
+export interface AuditLogCleanupResponse {
+  success: boolean;
+  deletedCount: number;
+  retentionDays: number;
+  message: string;
+}
