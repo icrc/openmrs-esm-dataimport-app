@@ -12,6 +12,8 @@ import {
   Layer,
   ComboBox,
   TextInput,
+  MultiSelect,
+  Link,
 } from '@carbon/react';
 import type { TemplateOptions } from '../types';
 import { useGetAllForms } from '../hooks/useGetAllForms';
@@ -33,9 +35,10 @@ const GenerateTemplate: React.FC = () => {
   const [templateOptions, setTemplateOptions] = useState<TemplateOptions>({ includePatientRegistration: true });
   const [isGenerating, setIsGenerating] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedLocationUuids, setSelectedLocationUuids] = useState<string[]>([]);
   const { locations, isLoading: isLoadingLocations, error: locationsError } = useGetAllLocations();
   const locationItems = useMemo(
-    () => (locations || []).map((l) => ({ uuid: l.uuid, label: l.display || l.name })),
+    () => (locations || []).map((l) => ({ id: l.uuid, uuid: l.uuid, label: l.display || l.name, name: l.name })),
     [locations],
   );
 
@@ -60,6 +63,14 @@ const GenerateTemplate: React.FC = () => {
     setUploadedFormFiles(files);
   }, []);
 
+  const calculateLocationCharCount = useMemo(() => {
+    if (selectedLocationUuids.length === 0) return 0;
+    return selectedLocationUuids.reduce((total, uuid) => {
+      const location = locationItems.find((l) => l.uuid === uuid);
+      return total + (location?.name?.length || 0) + 1; // +1 for separator
+    }, 0);
+  }, [selectedLocationUuids, locationItems]);
+
   const handleGenerateTemplate = async () => {
     try {
       setIsGenerating(true);
@@ -70,6 +81,9 @@ const GenerateTemplate: React.FC = () => {
       await generate(allFormIdentifiers, {
         includePatientRegistration: templateOptions.includePatientRegistration,
         locationUuid: templateOptions.locationUuid,
+        locationUuids: selectedLocationUuids.length > 0 ? selectedLocationUuids : undefined,
+        locationTagFilter: templateOptions.locationTagFilter,
+        restrictToAllowedLocations: templateOptions.restrictToAllowedLocations,
         filename: templateOptions.filename,
       });
       showSnackbar({
@@ -79,6 +93,7 @@ const GenerateTemplate: React.FC = () => {
       });
       setSelectedForms([]);
       setUploadedFormFiles([]);
+      setSelectedLocationUuids([]);
       setTemplateOptions({ includePatientRegistration: true });
     } catch (e) {
       showSnackbar({
@@ -208,28 +223,119 @@ const GenerateTemplate: React.FC = () => {
               </div>
 
               <div className={styles.optionGroup}>
-                <h4>{t('selectLocation', 'Select location')}</h4>
+                <h4>{t('defaultLocation', 'Default location')}</h4>
                 {isLoadingLocations ? (
                   <InlineLoading description={t('loadingLocations', 'Loading locations...')} />
                 ) : locationsError ? (
                   <p>{t('errorLoadingLocations', 'Error loading locations')}</p>
                 ) : (
-                  <ComboBox
-                    id="location-selector"
-                    titleText={t('location', 'Location')}
-                    placeholder={t('searchLocations', 'Search locations')}
-                    items={locationItems}
-                    itemToString={(item) => (item ? (item as { label?: string }).label || '' : '')}
-                    selectedItem={locationItems.find((l) => l.uuid === templateOptions.locationUuid) || null}
-                    onChange={({ selectedItem }) => {
-                      const selected = selectedItem as { uuid?: string } | null;
-                      setTemplateOptions({ ...templateOptions, locationUuid: selected?.uuid });
-                    }}
-                    shouldFilterItem={(data) => {
-                      const text = ((data?.item as { label?: string })?.label || '').toLowerCase();
-                      return text.includes((data?.inputValue || '').toLowerCase());
-                    }}
-                  />
+                  <>
+                    <ComboBox
+                      id="location-selector"
+                      titleText={t('location', 'Location')}
+                      placeholder={t('searchLocations', 'Search locations')}
+                      items={locationItems}
+                      itemToString={(item) => (item ? (item as { label?: string }).label || '' : '')}
+                      selectedItem={locationItems.find((l) => l.uuid === templateOptions.locationUuid) || null}
+                      onChange={({ selectedItem }) => {
+                        const selected = selectedItem as { uuid?: string } | null;
+                        setTemplateOptions({ ...templateOptions, locationUuid: selected?.uuid });
+                      }}
+                      shouldFilterItem={(data) => {
+                        const text = ((data?.item as { label?: string })?.label || '').toLowerCase();
+                        return text.includes((data?.inputValue || '').toLowerCase());
+                      }}
+                    />
+                    <p style={{ fontSize: '0.875rem', color: '#666', marginTop: '0.5rem' }}>
+                      {t('defaultLocationHint', 'Used when encounterLocation cell is empty')}
+                    </p>
+                  </>
+                )}
+              </div>
+
+              <div className={styles.optionGroup}>
+                <h4>{t('allowedLocations', 'Allowed locations')}</h4>
+                {isLoadingLocations ? (
+                  <InlineLoading description={t('loadingLocations', 'Loading locations...')} />
+                ) : locationsError ? (
+                  <p>{t('errorLoadingLocations', 'Error loading locations')}</p>
+                ) : (
+                  <>
+                    <TextInput
+                      id="location-tag-filter"
+                      labelText={t('locationTagFilter', 'Location tag filter (optional)')}
+                      placeholder={t('locationTagFilterPlaceholder', 'e.g., Visit Location')}
+                      value={templateOptions.locationTagFilter || ''}
+                      onChange={(event) =>
+                        setTemplateOptions({ ...templateOptions, locationTagFilter: event.target.value || undefined })
+                      }
+                      style={{ marginBottom: '1rem' }}
+                    />
+                    <div style={{ marginBottom: '0.5rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                      <Link
+                        onClick={() => setSelectedLocationUuids(locationItems.map((l) => l.uuid))}
+                        style={{ fontSize: '0.875rem', cursor: 'pointer' }}
+                      >
+                        {t('selectAll', 'Select all')}
+                      </Link>
+                      <span>|</span>
+                      <Link
+                        onClick={() => setSelectedLocationUuids([])}
+                        style={{ fontSize: '0.875rem', cursor: 'pointer' }}
+                      >
+                        {t('deselectAll', 'Deselect all')}
+                      </Link>
+                      <span
+                        style={{
+                          marginLeft: '1rem',
+                          fontSize: '0.875rem',
+                          color:
+                            calculateLocationCharCount > 30000
+                              ? '#da1e28'
+                              : calculateLocationCharCount > 25000
+                                ? '#f1c21b'
+                                : '#666',
+                        }}
+                      >
+                        {selectedLocationUuids.length === 0
+                          ? t('allLocationsIncluded', '(all locations will be included)')
+                          : calculateLocationCharCount > 30000
+                            ? t(
+                                'locationLimitExceeded',
+                                `${selectedLocationUuids.length} locations selected (~${calculateLocationCharCount} chars - exceeds Excel limit!)`,
+                              )
+                            : calculateLocationCharCount > 25000
+                              ? t(
+                                  'locationLimitWarning',
+                                  `${selectedLocationUuids.length} locations selected (~${calculateLocationCharCount} chars - approaching limit)`,
+                                )
+                              : t('locationsSelected', `${selectedLocationUuids.length} locations selected`)}
+                      </span>
+                    </div>
+                    <MultiSelect
+                      id="allowed-locations-selector"
+                      titleText={t('locations', 'Locations')}
+                      label={t('selectLocations', 'Select locations')}
+                      items={locationItems}
+                      itemToString={(item) => (item ? item.label : '')}
+                      selectedItems={locationItems.filter((l) => selectedLocationUuids.includes(l.uuid))}
+                      onChange={({ selectedItems }) => {
+                        setSelectedLocationUuids(selectedItems.map((item) => item.uuid));
+                      }}
+                    />
+                    <Checkbox
+                      id="restrictToAllowedLocations"
+                      labelText={t(
+                        'restrictToAllowedLocations',
+                        'Restrict to allowed locations (reject invalid locations during import)',
+                      )}
+                      checked={templateOptions.restrictToAllowedLocations || false}
+                      onChange={(event, { checked }) =>
+                        setTemplateOptions({ ...templateOptions, restrictToAllowedLocations: checked })
+                      }
+                      style={{ marginTop: '1rem' }}
+                    />
+                  </>
                 )}
               </div>
 

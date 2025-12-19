@@ -5,11 +5,17 @@ interface UiTemplateOptions {
   includePatientRegistration: boolean;
   filename?: string;
   locationUuid?: string;
+  locationUuids?: string[];
+  locationTagFilter?: string;
+  restrictToAllowedLocations?: boolean;
 }
 
 interface ServerTemplateOptions {
   includePatient?: boolean;
   locationUuid?: string;
+  locationUuids?: string[];
+  locationTagFilter?: string;
+  restrictToAllowedLocations?: boolean;
 }
 
 export function useGenerateTemplate() {
@@ -35,6 +41,9 @@ export function useGenerateTemplate() {
         options: {
           includePatient: options?.includePatientRegistration,
           locationUuid: options?.locationUuid,
+          locationUuids: options?.locationUuids,
+          locationTagFilter: options?.locationTagFilter,
+          restrictToAllowedLocations: options?.restrictToAllowedLocations,
         } as ServerTemplateOptions,
       };
 
