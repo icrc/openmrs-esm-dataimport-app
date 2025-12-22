@@ -6,16 +6,16 @@ interface UiTemplateOptions {
   filename?: string;
   locationUuid?: string;
   locationUuids?: string[];
-  locationTagFilter?: string;
   restrictToAllowedLocations?: boolean;
+  autoCloseVisits?: boolean;
 }
 
 interface ServerTemplateOptions {
   includePatient?: boolean;
   locationUuid?: string;
   locationUuids?: string[];
-  locationTagFilter?: string;
   restrictToAllowedLocations?: boolean;
+  autoCloseVisits?: boolean;
 }
 
 export function useGenerateTemplate() {
@@ -42,8 +42,8 @@ export function useGenerateTemplate() {
           includePatient: options?.includePatientRegistration,
           locationUuid: options?.locationUuid,
           locationUuids: options?.locationUuids,
-          locationTagFilter: options?.locationTagFilter,
           restrictToAllowedLocations: options?.restrictToAllowedLocations,
+          autoCloseVisits: options?.autoCloseVisits,
         } as ServerTemplateOptions,
       };
 

@@ -82,9 +82,9 @@ const GenerateTemplate: React.FC = () => {
         includePatientRegistration: templateOptions.includePatientRegistration,
         locationUuid: templateOptions.locationUuid,
         locationUuids: selectedLocationUuids.length > 0 ? selectedLocationUuids : undefined,
-        locationTagFilter: templateOptions.locationTagFilter,
         restrictToAllowedLocations: templateOptions.restrictToAllowedLocations,
         filename: templateOptions.filename,
+        autoCloseVisits: templateOptions.autoCloseVisits,
       });
       showSnackbar({
         title: t('templateAdded', 'Template Generated Successfully'),
@@ -220,6 +220,14 @@ const GenerateTemplate: React.FC = () => {
                     setTemplateOptions({ ...templateOptions, includePatientRegistration: checked })
                   }
                 />
+                <Checkbox
+                  id="autoCloseVisits"
+                  labelText={t('autoCloseVisits', 'Auto-close visits after encounter creation')}
+                  checked={templateOptions.autoCloseVisits || false}
+                  onChange={(event, { checked }) =>
+                    setTemplateOptions({ ...templateOptions, autoCloseVisits: checked })
+                  }
+                />
               </div>
 
               <div className={styles.optionGroup}>
@@ -261,16 +269,6 @@ const GenerateTemplate: React.FC = () => {
                   <p>{t('errorLoadingLocations', 'Error loading locations')}</p>
                 ) : (
                   <>
-                    <TextInput
-                      id="location-tag-filter"
-                      labelText={t('locationTagFilter', 'Location tag filter (optional)')}
-                      placeholder={t('locationTagFilterPlaceholder', 'e.g., Visit Location')}
-                      value={templateOptions.locationTagFilter || ''}
-                      onChange={(event) =>
-                        setTemplateOptions({ ...templateOptions, locationTagFilter: event.target.value || undefined })
-                      }
-                      style={{ marginBottom: '1rem' }}
-                    />
                     <div style={{ marginBottom: '0.5rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                       <Link
                         onClick={() => setSelectedLocationUuids(locationItems.map((l) => l.uuid))}
