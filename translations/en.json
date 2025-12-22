@@ -11,6 +11,7 @@
   "templateOptions": "Template Options",
   "includeDataSheets": "Include data sheets:",
   "includePatientRegistration": "Include Patient Registration Sheet",
+  "autoCloseVisits": "Auto-close visits after encounter creation",
   "includeVisitSheet": "Include Visit Sheet",
   "includeLocationDetails": "Include Location Details",
   "includeInstructions": "Add Instructions Sheet",

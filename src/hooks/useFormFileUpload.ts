@@ -1,9 +1,6 @@
 import { useCallback, useState } from 'react';
 import { openmrsFetch, restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
 
-/**
- * Response from the backend form file upload API
- */
 export interface FormFileUploadResponse {
   success: boolean;
   fileCount: number;
@@ -16,9 +13,6 @@ export interface FormFileUploadResponse {
   message: string;
 }
 
-/**
- * Uploaded form file metadata for UI display
- */
 export interface UploadedFormFile {
   fileId: string;
   filename: string;
@@ -26,10 +20,6 @@ export interface UploadedFormFile {
   sizeBytes: number;
 }
 
-/**
- * Hook for uploading form files (JSON/XML) to the backend
- * Returns file IDs that can be used in template generation
- */
 export function useFormFileUpload() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<Error | null>(null);
@@ -66,7 +56,6 @@ export function useFormFileUpload() {
         throw new Error(data.message || 'Upload failed');
       }
 
-      // Transform backend response to UI-friendly format
       const uploadedFormFiles: UploadedFormFile[] = data.fileIds.map((fileId, index) => ({
         fileId,
         filename: data.files[index].filename,

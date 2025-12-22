@@ -10,9 +10,9 @@ export interface TemplateOptions {
   // filenamePattern: string;
   locationUuid?: string;
   locationUuids?: string[];
-  locationTagFilter?: string;
   restrictToAllowedLocations?: boolean;
   filename?: string;
+  autoCloseVisits?: boolean;
 }
 
 export interface ImportOptions {
