@@ -1,25 +1,34 @@
 import { openmrsFetch, userHasAccess, useSession, restBaseUrl } from '@openmrs/esm-framework';
 import useSWR from 'swr';
 
-const customFormRepresentation =
-  '(uuid,name,display,encounterType:(uuid,name,viewPrivilege,editPrivilege),version,published,retired,resources:(uuid,name,dataType,valueReference))';
-
-const formEncounterUrl = `${restBaseUrl}/form?v=custom:${customFormRepresentation}`;
-const formEncounterUrlPoc = `${restBaseUrl}/form?v=custom:${customFormRepresentation}&q=poc`;
+const o3FormsUrl = `${restBaseUrl}/dataimport/forms/o3`;
 
 export function useGetAllForms(cachedOfflineFormsOnly = false) {
-  const session = useSession();
-  const showHtmlFormEntryForms = true;
-  const url = showHtmlFormEntryForms ? formEncounterUrl : formEncounterUrlPoc;
-  const { data, error } = useSWR([url, cachedOfflineFormsOnly], async () => {
-    const res = await openmrsFetch(url);
-    const forms = res.data?.results?.filter((form) => form.published && !/component/i.test(form.name)) ?? [];
+  const { data, error } = useSWR([o3FormsUrl, cachedOfflineFormsOnly], async () => {
+    const res = await openmrsFetch(o3FormsUrl);
+
+    const formsData = res.data?.forms ?? [];
+    const forms = formsData.map((form) => ({
+      uuid: form.uuid,
+      name: form.name,
+      display: form.name,
+      version: form.version,
+      description: form.description,
+      published: true,
+      retired: false,
+      encounterType: form.encounterTypeUuid
+        ? {
+            uuid: form.encounterTypeUuid,
+            name: form.encounterTypeName,
+          }
+        : undefined,
+    }));
 
     return forms;
   });
 
   return {
-    forms: data?.filter((form) => Boolean(userHasAccess(form.encounterType?.editPrivilege?.display, session?.user))),
+    forms: data,
     isLoading: !error && !data,
     error,
   };
